@@ -28,6 +28,7 @@ nul
 
 # Local tooling scratch
 .playwright-cli/
+.playwright-mcp/
 Data/.~lock.*
 wellfi-app/.codex/
 wellfi-app/.playwright-cli/
@@ -51,3 +52,4 @@ wellfi-app/public/data/operators/petronas-energy-canada-ltd/
 /stackdx-well-sync.skill
 /well-data-ingest.skill
 /zi9W2Ifx
+/_local/
