@@ -219,7 +219,7 @@ Note: The 121 "UNDEFINED" wells likely reflect legacy field coding from Penn Wes
 
 ### Multilateral Horizontal ("Fishbone") Architecture
 
-OBE's primary well design is the cold-flow multilateral horizontal — a single motherbore with multiple open-hole laterals branching horizontally. No slotted liners are needed for primary production. Pad drilling with 2-4 wells per pad is typical.
+OBE's primary well design is the cold-flow multilateral horizontal — a single motherbore with multiple open-hole laterals branching horizontally. **No hydraulic fracturing, no slotted liners** on primary production — the open-hole laterals rely on natural reservoir deliverability and wormhole/foamy oil mechanisms. Artificial lift is via **Progressive Cavity Pumps (PCP)**, optimized using WellFi real-time downhole pressure data (see Section 10). Pad drilling with 2-4 wells per pad is typical.
 
 | Formation | Well Design | DCET Capex | Source |
 |---|---|---|---|

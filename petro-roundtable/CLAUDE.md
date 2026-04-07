@@ -17,10 +17,13 @@ A Claude Code native petroleum engineering roundtable — a panel of AI speciali
 - Gemini 3.1 Pro audit completed — 3 gaps incorporated
 - Committed: `546a395` on `codex/bluesky-clearwater-import`
 
-**Phase 2: Obsidian Energy Operator Mastery — ACTIVE**
-- Operator agent: `operators/obsidian-energy.md`
-- Knowledge base: `knowledge/obsidian-energy.md` (13 sections, verified data)
-- Skill: `/ask-operator` routes questions to operator representatives
+**Phase 2: Obsidian Energy Operator Mastery — COMPLETE**
+- 10/10 validation questions passed with data citations
+- Gemini 3.1 Pro audit completed — 0 critical gaps (5 suggestions were Phase 5 data system scope)
+- Knowledge base: 13 sections, 649 lines, all data verified against 3 corporate PDFs + CSV analysis
+- KB hardening: added no-frac clarification and PCP lift details per Gemini review
+
+**Next: Phase 3 — Engineering Panel Activation**
 
 ## Directory Structure
 
