@@ -28,7 +28,12 @@ For documentation or workflow-oriented tasks, use these runbooks:
 - `skills/monthly-production-refresh/SKILL.md`
 - `skills/operator-onboarding/SKILL.md`
 - `skills/operator-smoke-test/SKILL.md`
+- `skills/well-trajectory-visualization/SKILL.md`
 - `skills/wellfi-supabase-rollout/SKILL.md`
+
+## Related Projects
+
+- `petro-roundtable/` — Petroleum engineering roundtable (AI specialist agents, formation knowledge bases, calculation scripts). See `petro-roundtable/CLAUDE.md` for details.
 
 ## Important Rules
 
