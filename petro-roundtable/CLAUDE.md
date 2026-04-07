@@ -17,7 +17,10 @@ A Claude Code native petroleum engineering roundtable — a panel of AI speciali
 - Gemini 3.1 Pro audit completed — 3 gaps incorporated
 - Committed: `546a395` on `codex/bluesky-clearwater-import`
 
-**Next: Phase 2 — Obsidian Energy Operator Mastery**
+**Phase 2: Obsidian Energy Operator Mastery — ACTIVE**
+- Operator agent: `operators/obsidian-energy.md`
+- Knowledge base: `knowledge/obsidian-energy.md` (13 sections, verified data)
+- Skill: `/ask-operator` routes questions to operator representatives
 
 ## Directory Structure
 
@@ -29,11 +32,14 @@ petro-roundtable/
   agents/                ← Agent definitions (.md files)
     geoscientist.md      ← Phase 1: Bluesky Formation specialist
   operators/             ← Operator representative agents (Phase 2+)
+    obsidian-energy.md   ← Phase 2: Obsidian Energy operator rep
   knowledge/             ← Curated formation knowledge bases
     bluesky-formation.md ← 13-section Bluesky reference (verified)
+    obsidian-energy.md   ← 13-section Obsidian Energy operator reference
   skills/                ← Skill definitions
     bluesky-briefing/    ← /bluesky-briefing — formation deep-dive
     ask-engineer/        ← /ask-engineer — route question to specialist
+    ask-operator/        ← /ask-operator — route question to operator rep
   calculations/          ← Python CLI scripts (run via Bash)
     decline_curves.py    ← Arps decline fitting, EUR estimation
     nodal_analysis.py    ← Vogel/Darcy IPR, VLP, operating point
@@ -78,7 +84,7 @@ Use `mcp__gemini-cli__ask-gemini` for peer review. Rules:
 ## Mastery Sequence (7 Phases)
 
 1. **Bluesky Formation Mastery** — COMPLETE
-2. Obsidian Energy Operator Mastery — NEXT
+2. **Obsidian Energy Operator Mastery** — (current)
 3. Engineering Panel (all 9 specialist agents)
 4. Roundtable Orchestration (Lead Engineer + /roundtable skill)
 5. StackDX MCP Server (well data queries)

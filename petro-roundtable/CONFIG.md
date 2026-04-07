@@ -16,7 +16,7 @@
 
 ## Active Phase
 
-**Phase 1: Bluesky Formation Mastery**
+**Phase 2: Obsidian Energy Operator Mastery**
 
 ## Agent Roster
 
@@ -36,7 +36,7 @@
 
 | Operator | Status | Phase | Domain |
 |---|---|---|---|
-| Obsidian Energy | Planned | 2 | Peace River Bluesky — cold-flow horizontal, fishbone wells, WellFi monitoring |
+| Obsidian Energy | **Active** | 2 | Peace River Bluesky — cold-flow horizontal, fishbone wells, WellFi monitoring |
 | CNRL | Planned | 6 | Peace River Bluesky/Clearwater — thermal CSS, Carmon Creek |
 | Baytex | Planned | 6 | Peace River Bluesky — polymer flood, Seal field |
 | Headwater | Planned | 6 | Clearwater — SAGD, primary cold flow |
@@ -49,8 +49,8 @@
 
 ## Mastery Sequence
 
-1. Bluesky Formation Mastery (current)
-2. Obsidian Energy Operator Mastery
+1. Bluesky Formation Mastery (complete)
+2. Obsidian Energy Operator Mastery (current)
 3. Engineering Panel (all 9 agents)
 4. Roundtable Orchestration (Lead Engineer + /roundtable skill)
 5. StackDX MCP Server
