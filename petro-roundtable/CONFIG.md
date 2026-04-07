@@ -1,5 +1,10 @@
 # Petro-Roundtable Configuration
 
+## Branch
+
+- **Main:** `petro-roundtable/main`
+- **Active work:** `petro-roundtable/phase-N` (branched from petro-roundtable/main)
+
 ## Model Assignments
 
 | Model | ID | Role |

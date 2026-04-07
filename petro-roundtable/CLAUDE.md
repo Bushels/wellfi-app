@@ -96,6 +96,26 @@ Each phase must be perfected before advancing. Iterate: BUILD > TEST > IDENTIFY 
 - **Update `CONFIG.md` phase status** when advancing phases
 - **Update this file** when adding agents, skills, or knowledge bases
 
+## Branch Strategy
+
+- **This project:** `petro-roundtable/main` branch (and `petro-roundtable/phase-N` for active work)
+- **WellFi app:** `codex/*` branches (separate git history)
+- Do NOT mix petro-roundtable commits with wellfi-app feature branches
+
+## Two Agent Systems — Do Not Confuse
+
+This repo contains two completely unrelated agent systems:
+
+| | Petro-Roundtable Agents (THIS PROJECT) | WellFi Development Agents |
+|---|---|---|
+| **Purpose** | Domain experts that ARE the product | Development agents that help BUILD the wellfi-app |
+| **Location** | `petro-roundtable/agents/` | `wellfi-app/agents/session-{N}/` |
+| **Examples** | Geoscientist, reservoir engineer | UI agent, data-integrity agent |
+| **Invoked by** | Users via `/ask-engineer`, `/roundtable` | Claude Code during dev sessions |
+| **Identity** | `ROUNDTABLE.md` | `wellfi-app/agents/COORDINATOR.md` |
+
+These systems share no code, no identity, and no coordination. If you are working on petro-roundtable, ignore `wellfi-app/agents/` entirely.
+
 ## Related Projects
 
 - `wellfi-app/` — WellFi multi-operator monitoring app (sibling project, same repo)
