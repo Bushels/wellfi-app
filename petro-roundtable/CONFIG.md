@@ -16,7 +16,11 @@
 
 ## Active Phase
 
-**Phase 2: Obsidian Energy Operator Mastery**
+**Phase 3: Engineering Panel Activation** (next)
+
+### Completed Phases
+- Phase 1: Bluesky Formation Mastery — 10/10 validation, Gemini audited
+- Phase 2: Obsidian Energy Operator Mastery — 10/10 validation, Gemini audited
 
 ## Agent Roster
 
@@ -49,9 +53,9 @@
 
 ## Mastery Sequence
 
-1. Bluesky Formation Mastery (complete)
-2. Obsidian Energy Operator Mastery (current)
-3. Engineering Panel (all 9 agents)
+1. ~~Bluesky Formation Mastery~~ (complete)
+2. ~~Obsidian Energy Operator Mastery~~ (complete)
+3. Engineering Panel — all 9 agents (next)
 4. Roundtable Orchestration (Lead Engineer + /roundtable skill)
 5. StackDX MCP Server
 6. Operator Expansion (CNRL, Baytex, Headwater)

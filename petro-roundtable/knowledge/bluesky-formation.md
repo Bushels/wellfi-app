@@ -215,7 +215,7 @@ The Bluesky sandstone is **semi-consolidated to unconsolidated**, which drives b
 
 | Operator | Fields | Production Methods | Notable |
 |---|---|---|---|
-| **Obsidian Energy** | Walrus, Harmon Valley South, Seal | Multilateral horizontal ("fishbone") cold flow, WellFi monitoring | 309 Bluesky locations; IP30 rates ~300 boe/d on recent appraisals |
+| **Obsidian Energy** | Walrus, Harmon Valley South, Cadotte, Seal | 10-leg multilateral horizontal cold flow, WellFi monitoring | 77 Bluesky + 103 Clearwater 2P locations (2025 Reserves Release); Walrus best IP30 361 boe/d |
 | **CNRL (ex-Shell)** | Carmon Creek | CSS thermal (horizontal wells 1,400m TD) | 8 billion bbl OBIP in PDA; split ~evenly estuarine/deltaic facies |
 | **Baytex** | Seal | Multilateral horizontal, polymer flood | 13,918 boe/d (2021); 2P reserves 48 million boe in Peace River |
 | **Murphy Oil** | Seal | Polymer flood pilot | Early Bluesky polymer flood experience; rapid water breakthrough |

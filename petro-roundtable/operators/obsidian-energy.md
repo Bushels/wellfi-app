@@ -1,4 +1,5 @@
 ---
+name: obsidian-energy
 agent_id: operator-obsidian-energy
 model: claude-opus-4-6
 type: operator-representative
