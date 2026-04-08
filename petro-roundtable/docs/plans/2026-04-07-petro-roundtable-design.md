@@ -67,35 +67,36 @@ petro-roundtable/
 ├── CONFIG.md                        # Model config, active agents, formation focus
 │
 ├── agents/                          # Claude Code native agent definitions
-│   ├── geoscientist.md              # Geology, petrophysics, formation evaluation
-│   ├── reservoir-engineer.md        # Recovery, PVT, decline curves, SAGD chamber
-│   ├── drilling-engineer.md         # Well planning, casing, directional, cementing
-│   ├── well-performance.md          # Completions, sand control, artificial lift
-│   ├── geomechanics.md              # Stability, sand prediction, cap rock, stress
-│   ├── facilities-engineer.md       # Surface facilities, steam, separation, water
-│   ├── economics-reserves.md        # NPV, reserves, royalties, pricing, decisions
-│   ├── simulation-engineer.md       # CFD, FEA, multiphase, thermal, erosion
-│   └── production-data.md           # SCADA, analytics, dashboards, data quality
+│   ├── geoscientist.md              # BUILT (Phase 1) — Geology, petrophysics, formation evaluation
+│   ├── reservoir-engineer.md        # BUILT (Phase 3) — Recovery, PVT, decline curves, EOR
+│   ├── drilling-engineer.md         # BUILT (Phase 3) — Well planning, casing, directional, cementing
+│   ├── well-performance.md          # BUILT (Phase 3) — Completions, sand control, artificial lift
+│   ├── geomechanics.md              # BUILT (Phase 3) — Stability, sand prediction, cap rock, stress
+│   ├── facilities-engineer.md       # BUILT (Phase 3) — Surface facilities, separation, water
+│   ├── economics-reserves.md        # BUILT (Phase 3) — NPV, reserves, royalties, pricing
+│   ├── simulation-engineer.md       # BUILT (Phase 3) — CMG STARS, thermal, foamy oil
+│   └── production-data.md           # BUILT (Phase 3) — SCADA, analytics, dashboards, data quality
 │
 ├── operators/                       # Operator representative agents
-│   ├── _template.md                 # Template for creating new operator reps
-│   ├── obsidian-energy.md           # Phase 2 — first operator, deep mastery
-│   ├── cnrl-peace-river.md          # Phase 6
-│   ├── baytex-energy.md             # Phase 6
-│   ├── headwater-exploration.md     # Phase 6
-│   ├── tamarack-valley.md           # Phase 6
-│   └── spur-petroleum.md            # Phase 6
+│   ├── _template.md                 # (planned) Template for creating new operator reps
+│   ├── obsidian-energy.md           # Phase 2 — BUILT, deep mastery
+│   ├── cnrl-peace-river.md          # (planned) Phase 6
+│   ├── baytex-energy.md             # (planned) Phase 6
+│   ├── headwater-exploration.md     # (planned) Phase 6
+│   ├── tamarack-valley.md           # (planned) Phase 6
+│   └── spur-petroleum.md            # (planned) Phase 6
 │
 ├── knowledge/                       # Curated formation knowledge bases
-│   ├── bluesky-formation.md         # Phase 1 — curated from geology + research
-│   ├── clearwater-formation.md      # Phase 7
-│   └── mcmurray-formation.md        # Phase 7
+│   ├── bluesky-formation.md         # Phase 1 — BUILT, curated from geology + research
+│   ├── obsidian-energy.md           # Phase 2 — BUILT, 13 sections from corporate PDFs
+│   ├── clearwater-formation.md      # (planned) Phase 7
+│   └── mcmurray-formation.md        # (planned) Phase 7
 │
 ├── skills/                          # Claude Code invokable skills
-│   ├── roundtable/SKILL.md          # /roundtable — full panel discussion
-│   ├── ask-engineer/SKILL.md        # /ask-engineer <specialty> — single agent
-│   ├── ask-operator/SKILL.md        # /ask-operator <name> — single operator rep
-│   └── bluesky-briefing/SKILL.md    # /bluesky-briefing — formation deep-dive
+│   ├── roundtable/SKILL.md          # (planned) Phase 4 — /roundtable full panel discussion
+│   ├── ask-engineer/SKILL.md        # BUILT — /ask-engineer <specialty> — single agent
+│   ├── ask-operator/SKILL.md        # BUILT — /ask-operator <name> — single operator rep
+│   └── bluesky-briefing/SKILL.md    # BUILT — /bluesky-briefing — formation deep-dive
 │
 ├── mcp/                             # MCP servers
 │   └── stackdx-server/              # Phase 5 — StackDX data access
@@ -111,11 +112,11 @@ petro-roundtable/
 │               └── refresh-data.ts  # Trigger StackDX re-pull
 │
 └── calculations/                    # Python engineering calculations
-    ├── decline_curves.py            # Arps decline, EUR, type curves
-    ├── nodal_analysis.py            # IPR, VLP, operating point
-    ├── sand_control.py              # PSD analysis, screen selection
-    ├── esp_design.py                # ESP sizing, power, temperature
-    └── wellbore_hydraulics.py       # Pressure drop, erosional velocity
+    ├── decline_curves.py            # BUILT — Arps decline, EUR, type curves
+    ├── nodal_analysis.py            # BUILT — IPR, VLP, operating point
+    ├── sand_control.py              # BUILT — PSD analysis, screen selection
+    ├── esp_design.py                # (planned) ESP sizing, power, temperature
+    └── wellbore_hydraulics.py       # (planned) Pressure drop, erosional velocity
 ```
 
 ## 4. Agent Design — Claude Code Native
@@ -538,3 +539,13 @@ Specifically:
 - [x] Financial metrics are current and sourced (3 corporate PDFs extracted)
 - [x] Agent correctly distinguishes OBE's cold-flow approach from CNRL's thermal approach
 - [x] Gemini 3.1 Pro finds no critical gaps in an operator knowledge audit — 0 critical gaps
+
+**Phase 3 (Engineering Panel) — COMPLETE (2026-04-07):**
+- [x] 8 specialist agents built following geoscientist.md template pattern
+- [x] All agents have consistent frontmatter (name, agent_id, description, model, tools, knowledge, gemini_review)
+- [x] All agents include Bluesky-specific domain knowledge, not just generic engineering
+- [x] All agents have 5 validation questions each (40 total)
+- [x] All agents reference available calculation scripts and flag gaps
+- [x] ask-engineer skill updated with name-to-file mapping for all 9 specialists
+- [x] Consistency review passed (1 fix: added gemini_review to geoscientist.md)
+- [x] Gemini 3.1 Pro panel audit finds 0 critical gaps — regulatory integration noted for Phase 4

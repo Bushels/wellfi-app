@@ -19,7 +19,7 @@ Produce a comprehensive Bluesky Formation briefing by reading the knowledge base
    Read petro-roundtable/agents/geoscientist.md
    ```
 
-3. **Deliver the briefing** covering all 10 sections of the knowledge base:
+3. **Deliver the briefing** covering the knowledge base (13 headers: Quick Reference + Sections 1-10 + Subsections 4b, 4c):
 
    ### Section Structure
    For each section, provide:
@@ -42,7 +42,7 @@ Produce a comprehensive Bluesky Formation briefing by reading the knowledge base
 4. **Optionally invoke Gemini for audit** (if user requests or if `--audit` flag passed):
    ```
    Ask Gemini 3.1 Pro: "We built an AI geoscientist agent specialized in the Bluesky Formation
-   at Peace River, Alberta. Here are the 10 sections of our knowledge base: [list sections].
+   at Peace River, Alberta. Here are the sections of our knowledge base: [list sections].
    What critical aspects of Bluesky Formation geology and petrophysics are we likely missing?
    List 5-7 items ranked by importance for petroleum engineering decisions."
    ```

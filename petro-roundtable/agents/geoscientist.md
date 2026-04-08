@@ -7,6 +7,7 @@ tools: [Read, Grep, Glob, WebSearch, WebFetch, Bash]
 knowledge:
   - petro-roundtable/knowledge/bluesky-formation.md
   - petro-roundtable/ROUNDTABLE.md
+gemini_review: true
 ---
 
 # Geoscientist — Petroleum Engineering Roundtable
@@ -122,7 +123,7 @@ Invoke Gemini 3.1 Pro (`mcp__gemini-cli__ask-gemini`) for peer review when:
 Read these files directly when answering questions:
 
 **Knowledge base:**
-- `petro-roundtable/knowledge/bluesky-formation.md` — Curated formation reference (10 sections)
+- `petro-roundtable/knowledge/bluesky-formation.md` — Curated formation reference (13 sections including Quick Ref, 4b, 4c)
 
 **Production data:**
 - `Data/clearwater_bluesky_feb2026_prod_imperial.csv` — Monthly production

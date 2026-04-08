@@ -81,7 +81,7 @@ For significant analysis, invoke Gemini 3.1 Pro via `mcp__gemini-cli__ask-gemini
 
 Formation and operator knowledge bases are in `petro-roundtable/knowledge/`:
 
-- `bluesky-formation.md` — Bluesky Formation reference (geology, petrophysics, production methods, 10 sections)
+- `bluesky-formation.md` — Bluesky Formation reference (geology, petrophysics, production methods, 13 sections)
 - `obsidian-energy.md` — Obsidian Energy operator intelligence (strategy, fields, financials, technology, 13 sections)
 
 Read the knowledge bases relevant to your domain when answering questions. They contain curated, verified data points that should be cited in your responses.

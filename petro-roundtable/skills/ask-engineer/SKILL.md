@@ -20,17 +20,32 @@ Route a question to a single specialist agent from the petroleum engineering rou
    - First argument = specialty name (e.g., `geoscientist`, `reservoir`, `drilling`)
    - Remaining text = the question to ask
 
-2. **Validate the specialist exists:**
+2. **Resolve the agent file** from the specialty name:
+
+   The specialty short name maps to an agent file. Use the table below, or fall back to a Glob:
    ```
-   Glob petro-roundtable/agents/<specialty>.md
+   Glob petro-roundtable/agents/<specialty>*.md
    ```
+
+   | Short name | Agent file |
+   |---|---|
+   | `geoscientist` | `agents/geoscientist.md` |
+   | `reservoir` | `agents/reservoir-engineer.md` |
+   | `drilling` | `agents/drilling-engineer.md` |
+   | `well-performance` | `agents/well-performance.md` |
+   | `geomechanics` | `agents/geomechanics.md` |
+   | `facilities` | `agents/facilities-engineer.md` |
+   | `economics` | `agents/economics-reserves.md` |
+   | `simulation` | `agents/simulation-engineer.md` |
+   | `production-data` | `agents/production-data.md` |
+
    If the agent file does not exist, respond:
    > "The **[specialty]** agent is not yet available. Available specialists: [list agents found in petro-roundtable/agents/]."
 
 3. **Load the specialist agent:**
    ```
-   Read petro-roundtable/ROUNDTABLE.md    (master identity)
-   Read petro-roundtable/agents/<specialty>.md  (specialist context)
+   Read petro-roundtable/ROUNDTABLE.md              (master identity)
+   Read petro-roundtable/agents/<resolved-file>.md   (specialist context)
    ```
 
 4. **Spawn the agent** with the Agent tool:
@@ -45,24 +60,25 @@ Route a question to a single specialist agent from the petroleum engineering rou
    - Data sources cited
    - Any flags for uncertainty or additional data needed
 
-## Available Specialists (Phase 1)
+## Available Specialists
+
+| Specialist | Agent File | Status | Domain |
+|---|---|---|---|
+| `geoscientist` | `agents/geoscientist.md` | **Active** | Formation evaluation, petrophysics, stratigraphy, facies |
+| `reservoir` | `agents/reservoir-engineer.md` | **Active** | Drainage, recovery factors, decline curves, EOR, waterflood |
+| `drilling` | `agents/drilling-engineer.md` | **Active** | Well design, directional, casing, cementing, mud weight |
+| `well-performance` | `agents/well-performance.md` | **Active** | Completions, sand control, PCP/ESP lift, production optimization |
+| `geomechanics` | `agents/geomechanics.md` | **Active** | Rock mechanics, wellbore stability, cap rock, stress analysis |
+| `facilities` | `agents/facilities-engineer.md` | **Active** | Surface facilities, OTSG, separation, water treatment, sand handling |
+| `economics` | `agents/economics-reserves.md` | **Active** | COGEH/NI 51-101, WCS pricing, break-even, F&D, NPV |
+| `simulation` | `agents/simulation-engineer.md` | **Active** | CMG STARS/IMEX, thermal modeling, foamy oil, multiphase flow |
+| `production-data` | `agents/production-data.md` | **Active** | SCADA, analytics, dashboards, data quality, WellFi integration |
+
+## Future Specialists (Phase 4)
 
 | Specialist | Agent File | Status |
 |---|---|---|
-| `geoscientist` | `agents/geoscientist.md` | Active |
-
-## Future Specialists (Phase 3+)
-
-| Specialist | Agent File | Status |
-|---|---|---|
-| `reservoir` | `agents/reservoir-engineer.md` | Planned |
-| `drilling` | `agents/drilling-engineer.md` | Planned |
-| `well-performance` | `agents/well-performance.md` | Planned |
-| `geomechanics` | `agents/geomechanics.md` | Planned |
-| `facilities` | `agents/facilities-engineer.md` | Planned |
-| `economics` | `agents/economics-reserves.md` | Planned |
-| `simulation` | `agents/simulation-engineer.md` | Planned |
-| `lead` | `agents/lead-engineer.md` | Planned |
+| `lead` | `agents/lead-engineer.md` | Planned (Phase 4) |
 
 ## Error Handling
 
