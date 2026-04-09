@@ -1090,9 +1090,9 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
         </Panel>
 
         <div style={{ display: "grid", gap: 16, alignContent: "start" }}>
-          <MetricCard label="Steady state" value={`${STEADY_STATE_KPA} kPa`} accent={COLORS.cyan} />
-          <MetricCard label="Overnight avg" value={`${OVERNIGHT_AVG_KPA} kPa`} accent={COLORS.green} />
-          <MetricCard label="Late Apr 3" value={`${LATE_PM_KPA} kPa`} accent={COLORS.cyan} />
+          <MetricCard label="Steady state" value={<NumberCounter target={STEADY_STATE_KPA} from={2000} suffix=" kPa" startFrame={630} />} accent={COLORS.cyan} />
+          <MetricCard label="Overnight avg" value={<NumberCounter target={OVERNIGHT_AVG_KPA} from={1900} suffix=" kPa" startFrame={750} />} accent={COLORS.green} />
+          <MetricCard label="Late Apr 3" value={<NumberCounter target={LATE_PM_KPA} from={1800} suffix=" kPa" startFrame={HERO_BEATS.lastPressure.frame} />} accent={COLORS.cyan} />
           <AnnotationBox
             title="Pump readout"
             body="Temperature drops from 24.8 C into the 21.6 C operating band after pump start. The late Apr 3 clean packets keep falling, which is why the approved storyboard ends with the line still moving."
@@ -1232,8 +1232,8 @@ function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
 
         <div style={{ display: "grid", gap: 16, alignContent: "start" }}>
           <MetricCard label="Normal band" value="19.1-19.4 BAR" accent={COLORS.cyan} />
-          <MetricCard label="Corrupted packet" value="168.65 BAR" accent={COLORS.crimson} />
-          <MetricCard label="Recovery" value="11:59 clean" accent={COLORS.green} />
+          <MetricCard label="Corrupted packet" value={<NumberCounter target={168.65} from={19} suffix=" BAR" decimals={2} startFrame={HERO_BEATS.crcFail.frame} duration={12} />} accent={COLORS.crimson} />
+          <MetricCard label="Recovery" value={<NumberCounter target={7} from={0} suffix=" min" startFrame={HERO_BEATS.crcRecovery.frame} />} accent={COLORS.green} />
           <AnnotationBox
             title="Correct interpretation"
             body="The sensor did not record a real 168.65 BAR pressure spike. The packet failed CRC, RMS jumped to 78%, and the next clean packet returned to 19.34 BAR seven minutes later."
