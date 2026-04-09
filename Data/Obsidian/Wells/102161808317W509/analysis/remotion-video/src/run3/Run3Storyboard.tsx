@@ -907,6 +907,42 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
   const lastPoint = pressureLine[pressureLine.length - 1];
   const coldSlug = tempLine.find((point) => point.data.timeLabel === "18:47");
 
+  // Build SVG path strings for evolvePath
+  const pressurePathD = pressureLine.length >= 2
+    ? `M ${pressureLine[0].x} ${pressureLine[0].y} ` +
+      pressureLine.slice(1).map((p) => `L ${p.x} ${p.y}`).join(" ")
+    : "";
+
+  const tempPathD = tempLine.length >= 2
+    ? `M ${tempLine[0].x} ${tempLine[0].y} ` +
+      tempLine.slice(1).map((p) => `L ${p.x} ${p.y}`).join(" ")
+    : "";
+
+  // Pressure draws left-to-right over the scene
+  const pressureTrace = interpolate(
+    props.state.progress,
+    [0.0, 0.87],
+    [0, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.quad) },
+  );
+
+  // Temperature follows pressure with a slight delay
+  const tempTrace = interpolate(
+    props.state.progress,
+    [0.07, 0.87],
+    [0, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.quad) },
+  );
+
+  const pressureEvolved = pressurePathD ? evolvePath(pressureTrace, pressurePathD) : null;
+  const tempEvolved = tempPathD ? evolvePath(tempTrace, tempPathD) : null;
+
+  // Callouts appear when the trace passes their minute position
+  const pressurePointVisible = (minute: number): number => {
+    const normalizedPos = compressedTimeRatio(minute);
+    return pressureTrace >= normalizedPos ? 1 : 0;
+  };
+
   return (
     <SceneFrame state={props.state}>
       <div style={{ display: "grid", gridTemplateColumns: "1.28fr 0.72fr", gap: 24, height: CONTENT_HEIGHT }}>
@@ -924,10 +960,56 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
                 fill={rgba("#242742", 0.42)}
               />
               <line x1={xFor(pumpMarkerMinute)} x2={xFor(pumpMarkerMinute)} y1={pressureChart.y} y2={tempChart.y + tempChart.h} stroke={rgba(COLORS.amber, 0.65)} strokeDasharray="12 8" />
-              <polyline points={polyline(pressureLine)} fill="none" stroke={rgba(COLORS.cyan, 0.14)} strokeWidth={18} strokeLinecap="round" strokeLinejoin="round" />
-              <polyline points={polyline(pressureLine)} fill="none" stroke={COLORS.cyan} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 14px ${rgba(COLORS.cyan, 0.7)})` }} />
-              <polyline points={polyline(tempLine)} fill="none" stroke={rgba(COLORS.amber, 0.16)} strokeWidth={16} strokeLinecap="round" strokeLinejoin="round" />
-              <polyline points={polyline(tempLine)} fill="none" stroke={COLORS.amber} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 14px ${rgba(COLORS.amber, 0.45)})` }} />
+              {pressureEvolved ? (
+                <>
+                  <path
+                    d={pressurePathD}
+                    fill="none"
+                    stroke={rgba(COLORS.cyan, 0.14)}
+                    strokeWidth={18}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray={pressureEvolved.strokeDasharray}
+                    strokeDashoffset={pressureEvolved.strokeDashoffset}
+                  />
+                  <path
+                    d={pressurePathD}
+                    fill="none"
+                    stroke={COLORS.cyan}
+                    strokeWidth={5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ filter: `drop-shadow(0 0 14px ${rgba(COLORS.cyan, 0.7)})` }}
+                    strokeDasharray={pressureEvolved.strokeDasharray}
+                    strokeDashoffset={pressureEvolved.strokeDashoffset}
+                  />
+                </>
+              ) : null}
+              {tempEvolved ? (
+                <>
+                  <path
+                    d={tempPathD}
+                    fill="none"
+                    stroke={rgba(COLORS.amber, 0.16)}
+                    strokeWidth={16}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray={tempEvolved.strokeDasharray}
+                    strokeDashoffset={tempEvolved.strokeDashoffset}
+                  />
+                  <path
+                    d={tempPathD}
+                    fill="none"
+                    stroke={COLORS.amber}
+                    strokeWidth={4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ filter: `drop-shadow(0 0 14px ${rgba(COLORS.amber, 0.45)})` }}
+                    strokeDasharray={tempEvolved.strokeDasharray}
+                    strokeDashoffset={tempEvolved.strokeDashoffset}
+                  />
+                </>
+              ) : null}
               <text x={pressureChart.x + 18} y={pressureChart.y + 34} fill={rgba(COLORS.text, 0.74)} fontFamily={FONTS.body} fontSize={20}>
                 Pressure (kPa absolute)
               </text>
@@ -941,25 +1023,25 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
                 PUMP
               </text>
               {lastPoint ? (
-                <>
+                <g opacity={pressurePointVisible(lastPoint.data.minute)}>
                   <circle cx={lastPoint.x} cy={lastPoint.y} r={8} fill={COLORS.white} stroke={COLORS.cyan} strokeWidth={4} />
                   <line x1={lastPoint.x} x2={lastPoint.x - 92} y1={lastPoint.y} y2={lastPoint.y - 38} stroke={rgba(COLORS.cyan, 0.72)} />
                   <text x={lastPoint.x - 268} y={lastPoint.y - 46} fill={COLORS.cyan} fontFamily={FONTS.mono} fontSize={18}>
                     LATE RAW TAIL 1810 kPa
                   </text>
-                </>
+                </g>
               ) : null}
               {coldSlug ? (
-                <>
+                <g opacity={pressurePointVisible(coldSlug.data.minute)}>
                   <circle cx={coldSlug.x} cy={coldSlug.y} r={7} fill={COLORS.white} stroke={COLORS.amber} strokeWidth={3} />
                   <line x1={coldSlug.x} x2={coldSlug.x + 90} y1={coldSlug.y} y2={coldSlug.y + 34} stroke={rgba(COLORS.amber, 0.7)} />
                   <text x={coldSlug.x + 98} y={coldSlug.y + 42} fill={COLORS.amber} fontFamily={FONTS.mono} fontSize={18}>
                     COLD SLUG 15.2 C
                   </text>
-                </>
+                </g>
               ) : null}
               {badPoints.map((point) => (
-                <g key={point.timeLabel}>
+                <g key={point.timeLabel} opacity={pressurePointVisible(point.minute)}>
                   <line x1={xFor(point.minute) - 10} x2={xFor(point.minute) + 10} y1={pressureChart.y + 30} y2={pressureChart.y + 50} stroke={rgba(COLORS.crimson, 0.9)} strokeWidth={3} />
                   <line x1={xFor(point.minute) + 10} x2={xFor(point.minute) - 10} y1={pressureChart.y + 30} y2={pressureChart.y + 50} stroke={rgba(COLORS.crimson, 0.9)} strokeWidth={3} />
                 </g>
