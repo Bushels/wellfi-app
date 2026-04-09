@@ -125,6 +125,23 @@ function stepIn(localFrame: number, delay: number, duration = 18): number {
   );
 }
 
+function timedOpacity(
+  frame: number,
+  appearFrame: number,
+  disappearFrame: number,
+  fadeFrames = 12,
+): number {
+  const enter = interpolate(frame, [appearFrame, appearFrame + fadeFrames], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const exit = interpolate(frame, [disappearFrame - fadeFrames, disappearFrame], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  return clamp(Math.min(enter, exit), 0, 1);
+}
+
 function panelStyle(accent: string = COLORS.cyan): React.CSSProperties {
   return {
     background: `linear-gradient(180deg, ${rgba(COLORS.panel, 0.96)} 0%, ${rgba(COLORS.bg, 0.96)} 100%)`,
@@ -546,6 +563,7 @@ function IntroScene(props: { state: SceneWindowState }): React.ReactElement {
 }
 
 function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
+  const frame = useCurrentFrame();
   const chart = { x: 80, y: 110, w: 820, h: 520 };
   const maxDepth = 920;
   const xFor = (dbv: number): number => chart.x + ((dbv + 110) / 85) * chart.w;
@@ -712,11 +730,13 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
           <MetricCard label="Peak signal" value={<NumberCounter target={37} from={0} prefix="-" suffix=" dBV" startFrame={HERO_BEATS.peakSignal.frame} />} accent={COLORS.green} />
           <MetricCard label="Fluid contact" value={<NumberCounter target={1.20} from={0} suffix=" BAR" decimals={2} startFrame={180} />} accent="#a78bfa" />
           <MetricCard label="On bottom" value={<NumberCounter target={100} from={0} prefix="-" suffix=" dBV" startFrame={340} />} accent={COLORS.crimson} />
-          <AnnotationBox
-            title="Why this matters"
-            body="The signal was strongest near 161 m MD, then collapsed once the tool entered fluid. By bottom, the link was still alive but operating below the -95 dBV noise floor."
-            accent={COLORS.green}
-          />
+          <div style={{ opacity: timedOpacity(frame, 250, 385) }}>
+            <AnnotationBox
+              title="Why this matters"
+              body="The signal was strongest near 161 m MD, then collapsed once the tool entered fluid. By bottom, the link was still alive but operating below the -95 dBV noise floor."
+              accent={COLORS.green}
+            />
+          </div>
         </div>
       </div>
     </SceneFrame>
@@ -911,11 +931,13 @@ function InterventionScene(props: { state: SceneWindowState }): React.ReactEleme
               );
             })}
 
-            <AnnotationBox
-              title="Customer-safe framing"
-              body={`The win is operational, not theatrical: better antenna placement plus a 1-joint pull moved the run from marginal to repeatable. Late Apr 3 RMS still averaged ${LATE_PM_AVG_RMS.toFixed(1)}%.`}
-              accent={COLORS.green}
-            />
+            <div style={{ opacity: timedOpacity(frame, 520, 595) }}>
+              <AnnotationBox
+                title="Customer-safe framing"
+                body={`The win is operational, not theatrical: better antenna placement plus a 1-joint pull moved the run from marginal to repeatable. Late Apr 3 RMS still averaged ${LATE_PM_AVG_RMS.toFixed(1)}%.`}
+                accent={COLORS.green}
+              />
+            </div>
           </div>
         </Panel>
       </div>
@@ -924,6 +946,7 @@ function InterventionScene(props: { state: SceneWindowState }): React.ReactEleme
 }
 
 function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
+  const frame = useCurrentFrame();
   const pressureChart = { x: 66, y: 96, w: 1060, h: 292 };
   const tempChart = { x: 66, y: 444, w: 1060, h: 196 };
   const cleanPoints = PRESSURE_TEMP_POINTS.filter((point) => !point.corrupted);
@@ -1093,16 +1116,20 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
           <MetricCard label="Steady state" value={<NumberCounter target={STEADY_STATE_KPA} from={2000} suffix=" kPa" startFrame={630} />} accent={COLORS.cyan} />
           <MetricCard label="Overnight avg" value={<NumberCounter target={OVERNIGHT_AVG_KPA} from={1900} suffix=" kPa" startFrame={750} />} accent={COLORS.green} />
           <MetricCard label="Late Apr 3" value={<NumberCounter target={LATE_PM_KPA} from={1800} suffix=" kPa" startFrame={HERO_BEATS.lastPressure.frame} />} accent={COLORS.cyan} />
-          <AnnotationBox
-            title="Pump readout"
-            body="Temperature drops from 24.8 C into the 21.6 C operating band after pump start. The late Apr 3 clean packets keep falling, which is why the approved storyboard ends with the line still moving."
-            accent={COLORS.amber}
-          />
-          <AnnotationBox
-            title="Conflict handled"
-            body={`Narrative docs stop at 14:50 and 18.46 BAR. The approved storyboard generator keeps the clean packet tail through 16:29 and reaches 18.10 BAR. This cut follows the raw packet-backed endpoint.`}
-            accent={COLORS.cyan}
-          />
+          <div style={{ opacity: timedOpacity(frame, 650, 780) }}>
+            <AnnotationBox
+              title="Pump readout"
+              body="Temperature drops from 24.8 C into the 21.6 C operating band after pump start. The late Apr 3 clean packets keep falling, which is why the approved storyboard ends with the line still moving."
+              accent={COLORS.amber}
+            />
+          </div>
+          <div style={{ opacity: timedOpacity(frame, 790, 895) }}>
+            <AnnotationBox
+              title="Conflict handled"
+              body={`Narrative docs stop at 14:50 and 18.46 BAR. The approved storyboard generator keeps the clean packet tail through 16:29 and reaches 18.10 BAR. This cut follows the raw packet-backed endpoint.`}
+              accent={COLORS.cyan}
+            />
+          </div>
         </div>
       </div>
     </SceneFrame>
@@ -1110,6 +1137,7 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
 }
 
 function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
+  const frame = useCurrentFrame();
   const chart = { x: 76, y: 128, w: 900, h: 430 };
   const goodPoints = GAS_KICK_POINTS.filter((point) => point.good);
   const badPoint = GAS_KICK_POINTS.find((point) => !point.good);
@@ -1234,16 +1262,20 @@ function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
           <MetricCard label="Normal band" value="19.1-19.4 BAR" accent={COLORS.cyan} />
           <MetricCard label="Corrupted packet" value={<NumberCounter target={168.65} from={19} suffix=" BAR" decimals={2} startFrame={HERO_BEATS.crcFail.frame} duration={12} />} accent={COLORS.crimson} />
           <MetricCard label="Recovery" value={<NumberCounter target={7} from={0} suffix=" min" startFrame={HERO_BEATS.crcRecovery.frame} />} accent={COLORS.green} />
-          <AnnotationBox
-            title="Correct interpretation"
-            body="The sensor did not record a real 168.65 BAR pressure spike. The packet failed CRC, RMS jumped to 78%, and the next clean packet returned to 19.34 BAR seven minutes later."
-            accent={COLORS.crimson}
-          />
-          <AnnotationBox
-            title="Operator context"
-            body="Field notes describe a slow pump and noisy signal during the kick. That is consistent with EM path disruption above the sensor, not with a believable downhole pressure jump at tool depth."
-            accent={COLORS.amber}
-          />
+          <div style={{ opacity: timedOpacity(frame, 1020, 1120) }}>
+            <AnnotationBox
+              title="Correct interpretation"
+              body="The sensor did not record a real 168.65 BAR pressure spike. The packet failed CRC, RMS jumped to 78%, and the next clean packet returned to 19.34 BAR seven minutes later."
+              accent={COLORS.crimson}
+            />
+          </div>
+          <div style={{ opacity: timedOpacity(frame, 1130, 1195) }}>
+            <AnnotationBox
+              title="Operator context"
+              body="Field notes describe a slow pump and noisy signal during the kick. That is consistent with EM path disruption above the sensor, not with a believable downhole pressure jump at tool depth."
+              accent={COLORS.amber}
+            />
+          </div>
         </div>
       </div>
     </SceneFrame>
