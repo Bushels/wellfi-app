@@ -2,6 +2,7 @@ import React from "react";
 import { evolvePath } from "@remotion/paths";
 import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame } from "remotion";
 import { GlowBurst } from "../components/GlowBurst";
+import { NumberCounter } from "../components/NumberCounter";
 import { COLORS, FONTS, FPS } from "../theme";
 import {
   GAS_KICK_POINTS,
@@ -188,7 +189,7 @@ function Panel(props: {
 
 function MetricCard(props: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   accent: string;
   tone?: string;
   style?: React.CSSProperties;
@@ -708,9 +709,9 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
         </Panel>
 
         <div style={{ display: "grid", gap: 16, alignContent: "start" }}>
-          <MetricCard label="Peak signal" value="-37 dBV" accent={COLORS.green} />
-          <MetricCard label="Fluid contact" value="1.20 BAR" accent="#a78bfa" />
-          <MetricCard label="On bottom" value="-100 dBV" accent={COLORS.crimson} />
+          <MetricCard label="Peak signal" value={<NumberCounter target={37} from={0} prefix="-" suffix=" dBV" startFrame={HERO_BEATS.peakSignal.frame} />} accent={COLORS.green} />
+          <MetricCard label="Fluid contact" value={<NumberCounter target={1.20} from={0} suffix=" BAR" decimals={2} startFrame={180} />} accent="#a78bfa" />
+          <MetricCard label="On bottom" value={<NumberCounter target={100} from={0} prefix="-" suffix=" dBV" startFrame={340} />} accent={COLORS.crimson} />
           <AnnotationBox
             title="Why this matters"
             body="The signal was strongest near 161 m MD, then collapsed once the tool entered fluid. By bottom, the link was still alive but operating below the -95 dBV noise floor."
@@ -1386,6 +1387,19 @@ export const Run3Storyboard: React.FC = () => {
       <InterventionScene state={sceneStates.interventions} />
       <PumpScene state={sceneStates.pump} />
       <GasKickScene state={sceneStates.gas} />
+      {/* Crimson edge flash at CRC fail moment */}
+      <AbsoluteFill
+        style={{
+          background: `radial-gradient(circle at 50% 50%, transparent 55%, ${rgba(COLORS.crimson, 0.12)} 100%)`,
+          opacity: interpolate(
+            frame,
+            [HERO_BEATS.crcFail.frame - 2, HERO_BEATS.crcFail.frame + 4, HERO_BEATS.crcFail.frame + 14],
+            [0, 0.08, 0],
+            { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+          ),
+          pointerEvents: "none" as const,
+        }}
+      />
       <PayoffScene state={sceneStates.payoff} />
       <SceneStrip activeKey={activeKey} />
     </AbsoluteFill>
