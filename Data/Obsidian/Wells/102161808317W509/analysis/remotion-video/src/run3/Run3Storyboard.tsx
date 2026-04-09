@@ -1079,6 +1079,27 @@ function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
   const pulse = 0.5 + 0.5 * Math.sin(props.state.localFrame / 3);
   const goodLine = goodPoints.map((point) => ({ x: xFor(point.minute), y: yFor(point.pressureBar) }));
 
+  // Build SVG path for evolvePath animation
+  const gasPathD = goodLine.length >= 2
+    ? `M ${goodLine[0].x} ${goodLine[0].y} ` +
+      goodLine.slice(1).map((p) => `L ${p.x} ${p.y}`).join(" ")
+    : "";
+
+  const gasTrace = interpolate(
+    props.state.progress,
+    [0.0, 0.7],
+    [0, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.quad) },
+  );
+
+  const gasEvolved = gasPathD ? evolvePath(gasTrace, gasPathD) : null;
+
+  // Points appear when trace reaches them (57 is the max minute in gas kick data)
+  const gasPointVisible = (minute: number): number => {
+    const normalizedPos = minute / 57;
+    return gasTrace >= normalizedPos ? 1 : 0;
+  };
+
   return (
     <SceneFrame state={props.state}>
       <div style={{ display: "grid", gridTemplateColumns: "1.08fr 0.92fr", gap: 24, height: CONTENT_HEIGHT }}>
@@ -1097,16 +1118,48 @@ function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
                   strokeDasharray="4 12"
                 />
               ))}
-              <polyline points={polyline(goodLine)} fill="none" stroke={rgba(COLORS.cyan, 0.16)} strokeWidth={18} strokeLinecap="round" strokeLinejoin="round" />
-              <polyline points={polyline(goodLine)} fill="none" stroke={COLORS.cyan} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 14px ${rgba(COLORS.cyan, 0.7)})` }} />
+              {gasEvolved ? (
+                <>
+                  <path
+                    d={gasPathD}
+                    fill="none"
+                    stroke={rgba(COLORS.cyan, 0.16)}
+                    strokeWidth={18}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray={gasEvolved.strokeDasharray}
+                    strokeDashoffset={gasEvolved.strokeDashoffset}
+                  />
+                  <path
+                    d={gasPathD}
+                    fill="none"
+                    stroke={COLORS.cyan}
+                    strokeWidth={5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ filter: `drop-shadow(0 0 14px ${rgba(COLORS.cyan, 0.7)})` }}
+                    strokeDasharray={gasEvolved.strokeDasharray}
+                    strokeDashoffset={gasEvolved.strokeDashoffset}
+                  />
+                </>
+              ) : null}
               <text x={chart.x + 18} y={chart.y + 34} fill={rgba(COLORS.text, 0.74)} fontFamily={FONTS.body} fontSize={20}>
                 Pressure at sensor depth stayed in-band during the kick
               </text>
               {goodPoints.map((point) => (
-                <circle key={point.timeLabel} cx={xFor(point.minute)} cy={yFor(point.pressureBar)} r={6} fill={COLORS.white} stroke={COLORS.cyan} strokeWidth={3} />
+                <circle
+                  key={point.timeLabel}
+                  cx={xFor(point.minute)}
+                  cy={yFor(point.pressureBar)}
+                  r={6}
+                  fill={COLORS.white}
+                  stroke={COLORS.cyan}
+                  strokeWidth={3}
+                  opacity={gasPointVisible(point.minute)}
+                />
               ))}
               {badPoint ? (
-                <>
+                <g opacity={gasPointVisible(50)}>
                   <line x1={xFor(badPoint.minute)} x2={xFor(badPoint.minute)} y1={chart.y + 28} y2={chart.y + chart.h} stroke={rgba(COLORS.crimson, 0.72)} strokeDasharray="12 10" />
                   <circle cx={xFor(badPoint.minute)} cy={chart.y + 40} r={20 + pulse * 10} fill={rgba(COLORS.crimson, 0.2 + pulse * 0.12)} />
                   <line x1={xFor(badPoint.minute) - 18} x2={xFor(badPoint.minute) + 18} y1={chart.y + 22} y2={chart.y + 58} stroke={COLORS.crimson} strokeWidth={4} />
@@ -1114,7 +1167,7 @@ function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
                   <text x={xFor(badPoint.minute) - 134} y={chart.y + 84} fill={COLORS.crimson} fontFamily={FONTS.mono} fontSize={18}>
                     11:52 CRC FAIL
                   </text>
-                </>
+                </g>
               ) : null}
             </svg>
           </div>
