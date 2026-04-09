@@ -1,0 +1,27 @@
+{
+  "name": "wellfi-deployment-story",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WellFi First Deployment Forensic Timeline Animation",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts DeploymentStory out/wellfi-deployment-story.mp4",
+    "render-gif": "remotion render src/index.ts DeploymentStory out/wellfi-deployment-story.gif --image-format png",
+    "render-run3": "remotion render src/index.ts DeploymentStoryRun3 out/wellfi-run3-deployment-story.mp4",
+    "still-run3": "remotion still src/index.ts DeploymentStoryRun3 out/wellfi-run3-deployment-story.png --frame=1350",
+    "render-run3-short": "remotion render src/index.ts DeploymentStoryRun3Short out/wellfi-run3-short.mp4",
+    "still-run3-short": "remotion still src/index.ts DeploymentStoryRun3Short out/wellfi-run3-short.png --frame=450"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.447",
+    "@remotion/paths": "4.0.447",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.447"
+  },
+  "devDependencies": {
+    "@remotion/bundler": "4.0.447",
+    "@types/react": "^19.0.0",
+    "typescript": "^5.9.0"
+  }
+}
