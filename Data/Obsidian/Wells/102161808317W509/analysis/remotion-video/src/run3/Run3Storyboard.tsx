@@ -1,9 +1,11 @@
 import React from "react";
 import { evolvePath } from "@remotion/paths";
 import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame } from "remotion";
+import { GlowBurst } from "../components/GlowBurst";
 import { COLORS, FONTS, FPS } from "../theme";
 import {
   GAS_KICK_POINTS,
+  HERO_BEATS,
   INTERVENTION_EVENTS,
   LATE_PM_AVG_RMS,
   LATE_PM_KPA,
@@ -692,6 +694,15 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
               <text x={chart.x - 40} y={chart.y + chart.h + 8} fill={rgba(COLORS.text, 0.72)} fontFamily={FONTS.body} fontSize={19} transform={`rotate(-90 ${chart.x - 40} ${chart.y + chart.h + 8})`}>
                 Depth (m MD)
               </text>
+              {peakPoint ? (
+                <GlowBurst
+                  triggerFrame={HERO_BEATS.peakSignal.frame}
+                  cx={peakPoint.x}
+                  cy={peakPoint.y}
+                  color={COLORS.green}
+                  restRadius={18}
+                />
+              ) : null}
             </svg>
           </div>
         </Panel>
@@ -712,6 +723,7 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
 }
 
 function InterventionScene(props: { state: SceneWindowState }): React.ReactElement {
+  const frame = useCurrentFrame();
   const accentForEvent = (color: string): string => {
     switch (color) {
       case "green":
@@ -730,7 +742,24 @@ function InterventionScene(props: { state: SceneWindowState }): React.ReactEleme
       <div style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 24, height: CONTENT_HEIGHT }}>
         <Panel title="Small surface changes unlocked the link" eyebrow="Field interventions" accent={COLORS.amber} style={{ height: "100%" }}>
           <div style={{ padding: "22px 24px 28px", display: "grid", gap: 18 }}>
-            <MetricCard label="Blackout ended" value="84 min" accent={COLORS.amber} tone={COLORS.bgGrad} />
+            <div style={{ position: "relative" }}>
+              <MetricCard label="Blackout ended" value="84 min" accent={COLORS.amber} tone={COLORS.bgGrad} />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: 28,
+                  opacity: interpolate(
+                    frame,
+                    [HERO_BEATS.pulledJoint.frame, HERO_BEATS.pulledJoint.frame + 12, HERO_BEATS.pulledJoint.frame + 30],
+                    [0, 0.35, 0],
+                    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                  ),
+                  boxShadow: `0 0 40px ${rgba(COLORS.amber, 0.6)}, inset 0 0 20px ${rgba(COLORS.amber, 0.15)}`,
+                  pointerEvents: "none" as const,
+                }}
+              />
+            </div>
             {INTERVENTION_EVENTS.map((event, index) => {
               const accent = accentForEvent(event.color);
               const reveal = stepIn(props.state.localFrame, 14 + index * 8);
@@ -1031,6 +1060,15 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
                   </text>
                 </g>
               ) : null}
+              {lastPoint ? (
+                <GlowBurst
+                  triggerFrame={HERO_BEATS.lastPressure.frame}
+                  cx={lastPoint.x}
+                  cy={lastPoint.y}
+                  color={COLORS.cyan}
+                  restRadius={14}
+                />
+              ) : null}
               {coldSlug ? (
                 <g opacity={pressurePointVisible(coldSlug.data.minute)}>
                   <circle cx={coldSlug.x} cy={coldSlug.y} r={7} fill={COLORS.white} stroke={COLORS.amber} strokeWidth={3} />
@@ -1168,6 +1206,24 @@ function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
                     11:52 CRC FAIL
                   </text>
                 </g>
+              ) : null}
+              {badPoint ? (
+                <>
+                  <GlowBurst
+                    triggerFrame={HERO_BEATS.crcFail.frame}
+                    cx={xFor(badPoint.minute)}
+                    cy={chart.y + 40}
+                    color={COLORS.crimson}
+                    restRadius={24}
+                  />
+                  <GlowBurst
+                    triggerFrame={HERO_BEATS.crcRecovery.frame}
+                    cx={xFor(57)}
+                    cy={yFor(19.34)}
+                    color={COLORS.green}
+                    restRadius={16}
+                  />
+                </>
               ) : null}
             </svg>
           </div>
