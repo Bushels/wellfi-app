@@ -1,5 +1,5 @@
 import React from "react";
-import { interpolate, useCurrentFrame } from "remotion";
+import { Easing, interpolate, useCurrentFrame } from "remotion";
 
 interface NumberCounterProps {
   /** The target number to count to */
@@ -39,12 +39,21 @@ export function NumberCounter({
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
+  // Fade in when counting begins — don't show "0" before the counter starts
+  const opacity = interpolate(
+    frame,
+    [startFrame - 6, startFrame + 4],
+    [0, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.quad) },
+  );
+
   const display = `${prefix}${value.toFixed(decimals)}${suffix}`;
 
   return (
     <span
       style={{
         fontVariantNumeric: "tabular-nums",
+        opacity,
         ...style,
       }}
     >

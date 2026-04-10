@@ -91,11 +91,13 @@ function getSceneWindow(frame: number, range: SceneRange): SceneWindowState {
   const enter = spring({
     frame: localFrame,
     fps: FPS,
-    config: { damping: 18, stiffness: 140, mass: 0.8 },
+    config: { damping: 20, stiffness: 120, mass: 0.9 },
   });
-  const exit = interpolate(frame, [end - 18, end], [1, 0], {
+  // Longer, eased exit (36 frames = 1.2s) for smoother scene transitions
+  const exit = interpolate(frame, [end - 36, end], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
+    easing: Easing.in(Easing.quad),
   });
   const opacity = clamp(enter * exit, 0, 1);
   return {
@@ -103,11 +105,11 @@ function getSceneWindow(frame: number, range: SceneRange): SceneWindowState {
     localFrame,
     opacity,
     progress: clamp((frame - start) / duration, 0, 1),
-    scale: interpolate(enter, [0, 1], [0.985, 1], {
+    scale: interpolate(enter, [0, 1], [0.97, 1], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     }),
-    translateY: interpolate(enter, [0, 1], [34, 0], {
+    translateY: interpolate(enter, [0, 1], [24, 0], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     }),
@@ -129,17 +131,79 @@ function timedOpacity(
   frame: number,
   appearFrame: number,
   disappearFrame: number,
-  fadeFrames = 12,
+  fadeFrames = 18,
 ): number {
   const enter = interpolate(frame, [appearFrame, appearFrame + fadeFrames], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
+    easing: Easing.out(Easing.quad),
   });
   const exit = interpolate(frame, [disappearFrame - fadeFrames, disappearFrame], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
+    easing: Easing.in(Easing.quad),
   });
   return clamp(Math.min(enter, exit), 0, 1);
+}
+
+// Camera zoom keyframe system — slow push-in toward hero moments, pull-back after
+interface CameraState {
+  scale: number;
+  originX: string;
+  originY: string;
+}
+
+function getCameraState(frame: number): CameraState {
+  // Keyframes: [frame, scale, originX%, originY%]
+  // Zoom in slowly before hero moments, settle, zoom back out
+  const keyframes: Array<[number, number, number, number]> = [
+    [0,    1.0,   50, 50],   // Intro — neutral
+    [120,  1.0,   50, 50],   // Depth scene start — neutral
+    [170,  1.06,  30, 30],   // Zoom in toward peak signal (top-left of chart)
+    [220,  1.02,  40, 40],   // Ease back slightly
+    [350,  1.04,  50, 75],   // Zoom toward bottom of chart (on-bottom moment)
+    [385,  1.0,   50, 50],   // Pull back for scene exit
+    [390,  1.0,   50, 50],   // Interventions start
+    [420,  1.03,  35, 40],   // Slight zoom toward blackout metric
+    [560,  1.0,   50, 50],   // Pull back
+    [600,  1.0,   50, 50],   // Pump scene start
+    [700,  1.03,  40, 45],   // Gentle lean-in as pressure draws
+    [830,  1.06,  80, 45],   // Zoom toward last pressure point (right side)
+    [870,  1.02,  60, 50],   // Ease back
+    [895,  1.0,   50, 50],   // Pull back for exit
+    [900,  1.0,   50, 50],   // Gas kick start
+    [980,  1.05,  55, 30],   // Zoom toward CRC fail area
+    [1060, 1.08,  60, 25],   // Maximum zoom at CRC fail moment
+    [1100, 1.03,  55, 45],   // Ease back after recovery
+    [1190, 1.0,   50, 50],   // Pull back for exit
+    [1200, 1.0,   50, 50],   // Payoff start
+    [1280, 1.02,  40, 50],   // Slight intimate zoom
+    [1500, 1.0,   50, 50],   // End — neutral
+  ];
+
+  // Find the surrounding keyframes and interpolate between them
+  let lower = keyframes[0];
+  let upper = keyframes[keyframes.length - 1];
+  for (let i = 0; i < keyframes.length - 1; i++) {
+    if (frame >= keyframes[i][0] && frame <= keyframes[i + 1][0]) {
+      lower = keyframes[i];
+      upper = keyframes[i + 1];
+      break;
+    }
+  }
+
+  const t = upper[0] === lower[0] ? 1 : interpolate(
+    frame,
+    [lower[0], upper[0]],
+    [0, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.quad) },
+  );
+
+  return {
+    scale: lower[1] + (upper[1] - lower[1]) * t,
+    originX: `${lower[2] + (upper[2] - lower[2]) * t}%`,
+    originY: `${lower[3] + (upper[3] - lower[3]) * t}%`,
+  };
 }
 
 function panelStyle(accent: string = COLORS.cyan): React.CSSProperties {
@@ -568,23 +632,18 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
   const maxDepth = 920;
   const xFor = (dbv: number): number => chart.x + ((dbv + 110) / 85) * chart.w;
   const yFor = (md: number): number => chart.y + (md / maxDepth) * chart.h;
-  const revealCount = clamp(
-    Math.ceil(interpolate(props.state.progress, [0.1, 0.82], [2, SIGNAL_DEPTH_POINTS.length], {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-    })),
-    2,
-    SIGNAL_DEPTH_POINTS.length,
-  );
-  const visiblePoints = SIGNAL_DEPTH_POINTS.slice(0, revealCount).map((point) => ({
+
+  // Build ALL points upfront (full path never changes — no more path-rebuild glitch)
+  const allPoints = SIGNAL_DEPTH_POINTS.map((point) => ({
     x: xFor(point.signalDbv),
     y: yFor(point.md),
     data: point,
   }));
-  // Build SVG path from visible points for evolvePath animation
-  const depthPathD = visiblePoints.length >= 2
-    ? `M ${visiblePoints[0].x} ${visiblePoints[0].y} ` +
-      visiblePoints.slice(1).map((p) => `L ${p.x} ${p.y}`).join(" ")
+
+  // Build the FULL SVG path once (stable across frames)
+  const depthPathD = allPoints.length >= 2
+    ? `M ${allPoints[0].x} ${allPoints[0].y} ` +
+      allPoints.slice(1).map((p) => `L ${p.x} ${p.y}`).join(" ")
     : "";
 
   // Progressive reveal: trace draws top-to-bottom over the scene
@@ -597,17 +656,20 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
 
   const depthEvolved = depthPathD ? evolvePath(traceProgress, depthPathD) : null;
 
-  // Each point appears when the trace reaches its normalized position
-  const pointVisible = (index: number): number => {
-    const pointProgress = index / Math.max(1, visiblePoints.length - 1);
-    return traceProgress >= pointProgress ? 1 : 0;
+  // Smooth fade-in over 10 frames instead of binary snap
+  const pointOpacity = (index: number): number => {
+    const pointProgress = index / Math.max(1, allPoints.length - 1);
+    return interpolate(traceProgress, [pointProgress - 0.02, pointProgress + 0.04], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
   };
 
   const noiseX = xFor(-95);
   const pullY = yFor(822.82);
-  const peakPoint = visiblePoints.find((point) => point.data.label === "Peak signal");
-  const fluidPoint = visiblePoints.find((point) => point.data.label === "Hit fluid");
-  const bottomPoint = visiblePoints[visiblePoints.length - 1];
+  const peakPoint = allPoints.find((point) => point.data.label === "Peak signal");
+  const fluidPoint = allPoints.find((point) => point.data.label === "Hit fluid");
+  const bottomPoint = allPoints[allPoints.length - 1];
 
   return (
     <SceneFrame state={props.state}>
@@ -665,7 +727,7 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
                   />
                 </>
               ) : null}
-              {visiblePoints.map((point, index) => (
+              {allPoints.map((point, index) => (
                 <circle
                   key={point.data.label}
                   cx={point.x}
@@ -674,11 +736,11 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
                   fill={point.data.label === "Peak signal" ? COLORS.green : COLORS.white}
                   stroke={COLORS.cyan}
                   strokeWidth={point.data.label === "Peak signal" ? 4 : 3}
-                  opacity={pointVisible(index)}
+                  opacity={pointOpacity(index)}
                 />
               ))}
               {peakPoint ? (
-                <g opacity={pointVisible(1)}>
+                <g opacity={pointOpacity(1)}>
                   <line x1={peakPoint.x} x2={peakPoint.x - 130} y1={peakPoint.y} y2={peakPoint.y + 32} stroke={rgba(COLORS.green, 0.7)} />
                   <text x={peakPoint.x - 140} y={peakPoint.y + 26} fill={COLORS.green} fontFamily={FONTS.mono} fontSize={18}>
                     PEAK -37 dBV
@@ -686,7 +748,7 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
                 </g>
               ) : null}
               {fluidPoint ? (
-                <g opacity={pointVisible(2)}>
+                <g opacity={pointOpacity(2)}>
                   <line x1={fluidPoint.x} x2={fluidPoint.x + 112} y1={fluidPoint.y} y2={fluidPoint.y - 16} stroke={rgba("#a78bfa", 0.7)} />
                   <text x={fluidPoint.x + 120} y={fluidPoint.y - 20} fill="#a78bfa" fontFamily={FONTS.mono} fontSize={18}>
                     HIT FLUID 1.20 BAR
@@ -694,7 +756,7 @@ function DepthScene(props: { state: SceneWindowState }): React.ReactElement {
                 </g>
               ) : null}
               {bottomPoint ? (
-                <g opacity={pointVisible(visiblePoints.length - 1)}>
+                <g opacity={pointOpacity(allPoints.length - 1)}>
                   <line x1={bottomPoint.x} x2={bottomPoint.x + 112} y1={bottomPoint.y} y2={bottomPoint.y - 34} stroke={rgba(COLORS.crimson, 0.7)} />
                   <text x={bottomPoint.x + 120} y={bottomPoint.y - 40} fill={COLORS.crimson} fontFamily={FONTS.mono} fontSize={18}>
                     ON BOTTOM -100 dBV
@@ -990,10 +1052,13 @@ function PumpScene(props: { state: SceneWindowState }): React.ReactElement {
   const pressureEvolved = pressurePathD ? evolvePath(pressureTrace, pressurePathD) : null;
   const tempEvolved = tempPathD ? evolvePath(tempTrace, tempPathD) : null;
 
-  // Callouts appear when the trace passes their minute position
+  // Callouts fade in smoothly as the trace passes their minute position
   const pressurePointVisible = (minute: number): number => {
     const normalizedPos = compressedTimeRatio(minute);
-    return pressureTrace >= normalizedPos ? 1 : 0;
+    return interpolate(pressureTrace, [normalizedPos - 0.02, normalizedPos + 0.03], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
   };
 
   return (
@@ -1161,10 +1226,13 @@ function GasKickScene(props: { state: SceneWindowState }): React.ReactElement {
 
   const gasEvolved = gasPathD ? evolvePath(gasTrace, gasPathD) : null;
 
-  // Points appear when trace reaches them (57 is the max minute in gas kick data)
+  // Points fade in smoothly as trace reaches them
   const gasPointVisible = (minute: number): number => {
     const normalizedPos = minute / 57;
-    return gasTrace >= normalizedPos ? 1 : 0;
+    return interpolate(gasTrace, [normalizedPos - 0.03, normalizedPos + 0.04], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
   };
 
   return (
@@ -1388,6 +1456,7 @@ function PayoffScene(props: { state: SceneWindowState }): React.ReactElement {
 
 export const Run3Storyboard: React.FC = () => {
   const frame = useCurrentFrame();
+  const camera = getCameraState(frame);
   const sceneStates = {
     intro: getSceneWindow(frame, RUN3_SCENES.intro),
     depth: getSceneWindow(frame, RUN3_SCENES.depth),
@@ -1406,33 +1475,45 @@ export const Run3Storyboard: React.FC = () => {
         fontFamily: FONTS.body,
       }}
     >
-      <AbsoluteFill
+      {/* Camera zoom wrapper — applies cinematic push-in/pull-back */}
+      <div
         style={{
-          backgroundImage: `linear-gradient(${rgba(COLORS.grid, 0.14)} 1px, transparent 1px), linear-gradient(90deg, ${rgba(COLORS.grid, 0.14)} 1px, transparent 1px)`,
-          backgroundSize: "120px 120px",
-          opacity: 0.28,
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${camera.scale})`,
+          transformOrigin: `${camera.originX} ${camera.originY}`,
+          willChange: "transform",
         }}
-      />
-      <HeaderBar />
-      <IntroScene state={sceneStates.intro} />
-      <DepthScene state={sceneStates.depth} />
-      <InterventionScene state={sceneStates.interventions} />
-      <PumpScene state={sceneStates.pump} />
-      <GasKickScene state={sceneStates.gas} />
-      {/* Crimson edge flash at CRC fail moment */}
-      <AbsoluteFill
-        style={{
-          background: `radial-gradient(circle at 50% 50%, transparent 55%, ${rgba(COLORS.crimson, 0.12)} 100%)`,
-          opacity: interpolate(
-            frame,
-            [HERO_BEATS.crcFail.frame - 2, HERO_BEATS.crcFail.frame + 4, HERO_BEATS.crcFail.frame + 14],
-            [0, 0.08, 0],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-          ),
-          pointerEvents: "none" as const,
-        }}
-      />
-      <PayoffScene state={sceneStates.payoff} />
+      >
+        <AbsoluteFill
+          style={{
+            backgroundImage: `linear-gradient(${rgba(COLORS.grid, 0.14)} 1px, transparent 1px), linear-gradient(90deg, ${rgba(COLORS.grid, 0.14)} 1px, transparent 1px)`,
+            backgroundSize: "120px 120px",
+            opacity: 0.28,
+          }}
+        />
+        <HeaderBar />
+        <IntroScene state={sceneStates.intro} />
+        <DepthScene state={sceneStates.depth} />
+        <InterventionScene state={sceneStates.interventions} />
+        <PumpScene state={sceneStates.pump} />
+        <GasKickScene state={sceneStates.gas} />
+        {/* Crimson edge flash at CRC fail moment */}
+        <AbsoluteFill
+          style={{
+            background: `radial-gradient(circle at 50% 50%, transparent 55%, ${rgba(COLORS.crimson, 0.12)} 100%)`,
+            opacity: interpolate(
+              frame,
+              [HERO_BEATS.crcFail.frame - 2, HERO_BEATS.crcFail.frame + 4, HERO_BEATS.crcFail.frame + 14],
+              [0, 0.08, 0],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+            ),
+            pointerEvents: "none" as const,
+          }}
+        />
+        <PayoffScene state={sceneStates.payoff} />
+      </div>
+      {/* Scene strip stays OUTSIDE the zoom wrapper — always at bottom edge */}
       <SceneStrip activeKey={activeKey} />
     </AbsoluteFill>
   );
