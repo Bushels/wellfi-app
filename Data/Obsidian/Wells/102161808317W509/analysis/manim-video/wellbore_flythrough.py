@@ -18,6 +18,8 @@ from well_data import (
     WELL_PATH_3D, WELL_MD, md_to_3d, md_to_index,
     SURFACE_CASING_MD, BUILD_START_MD, BLUESKY_TOP_TVD,
     WELLFI_POSITION_MD, CASING_SHOE_MD,
+    WELLFI_ON_BOTTOM_MD, JOINT_LENGTH, PEAK_SIGNAL_MD,
+    FLUID_CONTACT_MD, NOISE_FLOOR_DBV, SIGNAL_DEPTH_POINTS,
 )
 
 # ---------------------------------------------------------------------------
@@ -407,4 +409,272 @@ class Scene3_BuildCloseUp(ThreeDScene):
 
         self.wait(1.5)
 
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
+
+
+# ---------------------------------------------------------------------------
+# Scene 4: Tool Descent — RIH Animation (12s)
+# ---------------------------------------------------------------------------
+
+class Scene4_ToolDescent(ThreeDScene):
+    """Animated tool descent along the well path with signal degradation."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+        self.set_camera_orientation(phi=65 * DEGREES, theta=-50 * DEGREES)
+        self.camera.frame_center = np.array([-0.5, 1.2, -3.3])
+        self.camera.focal_distance = 8.0
+
+        # Static well path (dim backdrop)
+        crop_idx = md_to_index(CROP_MD)
+        path_points = WELL_PATH_3D[:crop_idx + 1]
+        path_md = WELL_MD[:crop_idx + 1]
+        well_path = build_well_path_colored(path_points, path_md)
+        well_path.set_opacity(0.2)
+
+        # Formation plane (dim)
+        formation_z = -BLUESKY_TOP_TVD / 100.0
+        formation_plane = Surface(
+            lambda u, v: np.array([u, v, formation_z]),
+            u_range=[-3.5, 2.5], v_range=[-0.5, 5.5],
+            fill_color=GREEN_HEX, fill_opacity=0.08,
+            stroke_width=0, checkerboard_colors=False,
+        )
+
+        self.add(well_path, formation_plane)
+
+        # Tool descent points — surface to on-bottom (832.3m MD)
+        bottom_idx = md_to_index(WELLFI_ON_BOTTOM_MD)
+        descent_points = WELL_PATH_3D[:bottom_idx + 1]
+
+        # Build a VMobject path for MoveAlongPath
+        descent_curve = VMobject()
+        descent_curve.set_points_as_corners([p.tolist() for p in descent_points])
+        descent_curve.set_stroke(opacity=0)  # invisible — just for MoveAlongPath
+
+        # The tool — a glowing amber sphere
+        tool = Sphere(radius=0.10, color=AMBER_HEX)
+        tool.move_to(descent_points[0].tolist())
+
+        # Trail ValueTracker + always_redraw
+        progress = ValueTracker(0)
+
+        def get_trail():
+            t = progress.get_value()
+            n_points = max(2, int(t * len(descent_points)))
+            trail_pts = descent_points[:n_points]
+            trail = VMobject()
+            trail.set_points_as_corners([p.tolist() for p in trail_pts])
+            trail.set_stroke(color=CYAN_HEX, width=3, opacity=0.6)
+            return trail
+
+        trail_mob = always_redraw(get_trail)
+
+        # Signal strength label (fixed in frame)
+        signal_label = Text("SIGNAL: —", font_size=18, color=CYAN_HEX, font="Consolas")
+        signal_label.to_edge(UP + RIGHT, buff=0.6)
+        self.add_fixed_in_frame_mobjects(signal_label)
+        signal_label.set_opacity(0)
+
+        self.add(trail_mob, tool)
+
+        # Animate descent over 6 seconds
+        self.play(
+            MoveAlongPath(tool, descent_curve, rate_func=smooth),
+            progress.animate.set_value(1.0),
+            signal_label.animate.set_opacity(1),
+            run_time=6,
+        )
+
+        # On bottom label
+        bottom_label = Text(
+            "ON BOTTOM  832m MD  |  -100 dBV",
+            font_size=18, color="#dc2626", font="Consolas",
+        )
+        bottom_label.to_edge(DOWN, buff=0.6)
+        self.add_fixed_in_frame_mobjects(bottom_label)
+        bottom_label.set_opacity(0)
+
+        self.play(
+            tool.animate.set_color("#dc2626"),
+            bottom_label.animate.set_opacity(1),
+            run_time=1.0,
+        )
+
+        self.wait(2)
+
+        # Signal below noise floor — tool pulses dim
+        for _ in range(3):
+            self.play(tool.animate.set_opacity(0.3), run_time=0.5)
+            self.play(tool.animate.set_opacity(0.8), run_time=0.5)
+
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
+
+
+# ---------------------------------------------------------------------------
+# Scene 5: Signal Failure — On Bottom (6s)
+# ---------------------------------------------------------------------------
+
+class Scene5_SignalFailure(ThreeDScene):
+    """Tool sitting on bottom, signal at noise floor, 84-min blackout."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+        self.set_camera_orientation(phi=55 * DEGREES, theta=-40 * DEGREES)
+
+        # Zoom to bottom-hole area
+        bottom_3d = md_to_3d(WELLFI_ON_BOTTOM_MD)
+        self.camera.frame_center = bottom_3d.tolist()
+        self.camera.focal_distance = 6.0
+
+        # Local well path around bottom (last ~200m of crop)
+        local_start_idx = md_to_index(700.0)
+        crop_idx = md_to_index(CROP_MD)
+        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
+        local_md = WELL_MD[local_start_idx:crop_idx + 1]
+        local_path = build_well_path_colored(local_points, local_md)
+        local_path.set_opacity(0.3)
+
+        # Formation plane
+        formation_z = -BLUESKY_TOP_TVD / 100.0
+        formation_plane = Surface(
+            lambda u, v: np.array([u, v, formation_z]),
+            u_range=[-3.5, 2.5], v_range=[-0.5, 5.5],
+            fill_color=GREEN_HEX, fill_opacity=0.06,
+            stroke_width=0, checkerboard_colors=False,
+        )
+
+        # Tool on bottom — red, dim, pulsing
+        tool = Sphere(radius=0.14, color="#dc2626")
+        tool.move_to(bottom_3d.tolist())
+        tool.set_opacity(0.5)
+
+        # Glow ring
+        glow = Sphere(radius=0.28, color="#dc2626")
+        glow.move_to(bottom_3d.tolist())
+        glow.set_opacity(0.15)
+
+        self.add(local_path, formation_plane, glow, tool)
+
+        # Labels
+        status_label = Text(
+            "SIGNAL BELOW NOISE FLOOR",
+            font_size=22, color="#dc2626", font="Consolas",
+        )
+        status_label.to_edge(UP, buff=0.6)
+
+        crc_label = Text(
+            "33% CRC PASS RATE  |  84-MINUTE BLACKOUT",
+            font_size=18, color=DIM_HEX, font="Consolas",
+        )
+        crc_label.to_edge(DOWN, buff=0.6)
+
+        self.add_fixed_in_frame_mobjects(status_label, crc_label)
+        status_label.set_opacity(0)
+        crc_label.set_opacity(0)
+
+        self.play(status_label.animate.set_opacity(1), run_time=1.0)
+
+        # Pulsing tool — barely alive
+        for _ in range(3):
+            self.play(tool.animate.set_opacity(0.2), run_time=0.6)
+            self.play(tool.animate.set_opacity(0.6), run_time=0.6)
+
+        self.play(crc_label.animate.set_opacity(1), run_time=0.8)
+        self.wait(1.0)
+
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
+
+
+# ---------------------------------------------------------------------------
+# Scene 6: Pulled 1 Joint (8s)
+# ---------------------------------------------------------------------------
+
+class Scene6_PulledJoint(ThreeDScene):
+    """Tool moves UP 9.456m — signal restored, blackout ends."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+        self.set_camera_orientation(phi=55 * DEGREES, theta=-40 * DEGREES)
+
+        bottom_3d = md_to_3d(WELLFI_ON_BOTTOM_MD)
+        self.camera.frame_center = bottom_3d.tolist()
+        self.camera.focal_distance = 6.0
+
+        # Local well path
+        local_start_idx = md_to_index(700.0)
+        crop_idx = md_to_index(CROP_MD)
+        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
+        local_md = WELL_MD[local_start_idx:crop_idx + 1]
+        local_path = build_well_path_colored(local_points, local_md)
+        local_path.set_opacity(0.3)
+
+        # Formation plane
+        formation_z = -BLUESKY_TOP_TVD / 100.0
+        formation_plane = Surface(
+            lambda u, v: np.array([u, v, formation_z]),
+            u_range=[-3.5, 2.5], v_range=[-0.5, 5.5],
+            fill_color=GREEN_HEX, fill_opacity=0.06,
+            stroke_width=0, checkerboard_colors=False,
+        )
+
+        # Tool starts on bottom (red)
+        tool = Sphere(radius=0.14, color="#dc2626")
+        tool.move_to(bottom_3d.tolist())
+        tool.set_opacity(0.5)
+
+        self.add(local_path, formation_plane, tool)
+
+        # Labels
+        action_label = Text(
+            "PULLING 1 JOINT  —  9.456m",
+            font_size=22, color=AMBER_HEX, font="Consolas",
+        )
+        action_label.to_edge(UP, buff=0.6)
+
+        result_label = Text(
+            "84-MIN BLACKOUT ENDED  |  SIGNAL RESTORED",
+            font_size=20, color=CYAN_HEX, font="Consolas",
+        )
+        result_label.to_edge(DOWN, buff=0.6)
+
+        self.add_fixed_in_frame_mobjects(action_label, result_label)
+        action_label.set_opacity(0)
+        result_label.set_opacity(0)
+
+        self.play(action_label.animate.set_opacity(1), run_time=0.8)
+
+        # Move tool UP to new position (819.9m MD)
+        new_pos = md_to_3d(WELLFI_POSITION_MD)
+
+        self.play(
+            tool.animate.move_to(new_pos.tolist()).set_color(AMBER_HEX).set_opacity(0.9),
+            run_time=2.0,
+            rate_func=smooth,
+        )
+
+        self.wait(0.5)
+
+        # Signal restored — tool turns cyan
+        self.play(
+            tool.animate.set_color(CYAN_HEX),
+            result_label.animate.set_opacity(1),
+            run_time=1.2,
+        )
+
+        # New position label
+        pos_label = Text(
+            "NEW POSITION  819.9m MD  |  663.1m TVD",
+            font_size=16, color=DIM_HEX, font="Consolas",
+        )
+        pos_label.next_to(result_label, UP, buff=0.3)
+        self.add_fixed_in_frame_mobjects(pos_label)
+        pos_label.set_opacity(0)
+        self.play(pos_label.animate.set_opacity(1), run_time=0.8)
+
+        # Camera slowly pulls back
+        self.move_camera(
+            phi=60 * DEGREES,
+            theta=-45 * DEGREES,
+            run_time=2.0,
+        )
+
+        self.wait(1.0)
         self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
