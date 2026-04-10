@@ -827,3 +827,215 @@ class Scene8_Overnight(Scene):
         self.play(FadeIn(morning_text), run_time=0.8)
         self.wait(1.0)
         self.play(FadeOut(Group(*self.mobjects)), run_time=0.5)
+
+
+# ---------------------------------------------------------------------------
+# Scene 9: Gas Kick Event (10s)
+# ---------------------------------------------------------------------------
+
+class Scene9_GasKick(ThreeDScene):
+    """Gas kick disrupts EM signal \u2014 CRC fail, then recovery."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+        self.set_camera_orientation(phi=55 * DEGREES, theta=-40 * DEGREES)
+
+        wellfi_3d = md_to_3d(WELLFI_POSITION_MD)
+        self.camera.frame_center = wellfi_3d.tolist()
+        self.camera.focal_distance = 6.0
+
+        # Local well path (dim)
+        local_start_idx = md_to_index(700.0)
+        crop_idx = md_to_index(CROP_MD)
+        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
+        local_md = WELL_MD[local_start_idx:crop_idx + 1]
+        local_path = build_well_path_colored(local_points, local_md)
+        local_path.set_opacity(0.2)
+
+        # Formation plane
+        formation_z = -BLUESKY_TOP_TVD / 100.0
+        formation_plane = Surface(
+            lambda u, v: np.array([u, v, formation_z]),
+            u_range=[-3.5, 2.5], v_range=[-0.5, 5.5],
+            fill_color=GREEN_HEX, fill_opacity=0.06,
+            stroke_width=0, checkerboard_colors=False,
+        )
+
+        # Tool (cyan, normal operation)
+        tool = Sphere(radius=0.12, color=CYAN_HEX)
+        tool.move_to(wellfi_3d.tolist())
+
+        # Glow ring
+        glow = Sphere(radius=0.22, color=CYAN_HEX)
+        glow.move_to(wellfi_3d.tolist())
+        glow.set_opacity(0.2)
+
+        self.add(local_path, formation_plane, glow, tool)
+
+        # Phase 1: Normal operation label
+        normal_label = Text(
+            "Apr 3, 11:02  |  P: 19.34 BAR  |  NORMAL",
+            font_size=18, color=CYAN_HEX, font="Consolas",
+        )
+        normal_label.to_edge(UP, buff=0.5)
+        self.add_fixed_in_frame_mobjects(normal_label)
+        normal_label.set_opacity(0)
+
+        self.play(normal_label.animate.set_opacity(1), run_time=0.8)
+        self.wait(1.0)
+
+        # Phase 2: Gas kick begins \u2014 pump stalling
+        kick_label = Text(
+            "11:17  |  GAS KICK  |  PUMP STALLING",
+            font_size=22, color=AMBER_HEX, font="Consolas",
+        )
+        kick_label.to_edge(UP, buff=0.5)
+        self.add_fixed_in_frame_mobjects(kick_label)
+        kick_label.set_opacity(0)
+
+        self.play(
+            normal_label.animate.set_opacity(0),
+            kick_label.animate.set_opacity(1),
+            tool.animate.set_color(AMBER_HEX),
+            glow.animate.set_color(AMBER_HEX).set_opacity(0.3),
+            run_time=1.0,
+        )
+
+        # Animated gas bubbles \u2014 small crimson spheres rising above the tool
+        gas_bubbles = VGroup()
+        for i in range(6):
+            bubble = Sphere(radius=0.04 + i * 0.008, color="#dc2626")
+            offset = np.array([
+                0.05 * (i % 3 - 1),
+                0.05 * ((i + 1) % 3 - 1),
+                0.08 * i,
+            ])
+            bubble.move_to((wellfi_3d + offset).tolist())
+            bubble.set_opacity(0.5)
+            gas_bubbles.add(bubble)
+
+        self.play(FadeIn(gas_bubbles), run_time=0.5)
+
+        # Bubbles rise upward (positive Z in well coordinates = shallower)
+        # Split shift and opacity into separate plays to avoid chaining two
+        # .animate transforms on the same object in one self.play() call.
+        self.play(
+            gas_bubbles.animate.shift([0, 0, 1.5]),
+            run_time=1.5,
+        )
+        self.play(FadeOut(gas_bubbles), run_time=0.3)
+
+        # Phase 3: CRC FAIL \u2014 the dramatic moment
+        crc_label = Text(
+            "11:52  |  168.65 BAR  |  CRC FAIL",
+            font_size=26, color="#dc2626", font="Consolas",
+        )
+        crc_label.to_edge(UP, buff=0.5)
+        self.add_fixed_in_frame_mobjects(crc_label)
+        crc_label.set_opacity(0)
+
+        self.play(
+            kick_label.animate.set_opacity(0),
+            crc_label.animate.set_opacity(1),
+            tool.animate.set_color("#dc2626"),
+            glow.animate.set_color("#dc2626").set_opacity(0.5),
+            run_time=0.8,
+        )
+
+        # Tool flashes bright red
+        self.play(
+            tool.animate.set_opacity(1.0),
+            glow.animate.set_opacity(0.6),
+            run_time=0.3,
+        )
+        self.play(
+            tool.animate.set_opacity(0.4),
+            glow.animate.set_opacity(0.15),
+            run_time=0.3,
+        )
+
+        self.wait(0.5)
+
+        # Phase 4: Recovery \u2014 7 minutes later
+        recovery_label = Text(
+            "11:59  |  P: 19.34 BAR  |  RECOVERED",
+            font_size=22, color=GREEN_HEX, font="Consolas",
+        )
+        recovery_label.to_edge(UP, buff=0.5)
+        self.add_fixed_in_frame_mobjects(recovery_label)
+        recovery_label.set_opacity(0)
+
+        self.play(
+            crc_label.animate.set_opacity(0),
+            recovery_label.animate.set_opacity(1),
+            tool.animate.set_color(GREEN_HEX).set_opacity(0.9),
+            glow.animate.set_color(GREEN_HEX).set_opacity(0.25),
+            run_time=1.2,
+        )
+
+        # Recovery note
+        note = Text(
+            "GARBLED PACKET CLASSIFIED  |  7-MIN RECOVERY",
+            font_size=16, color=DIM_HEX, font="Consolas",
+        )
+        note.to_edge(DOWN, buff=0.6)
+        self.add_fixed_in_frame_mobjects(note)
+        note.set_opacity(0)
+        self.play(note.animate.set_opacity(1), run_time=0.8)
+
+        self.wait(1.5)
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
+
+
+# ---------------------------------------------------------------------------
+# Scene 10: Late Drawdown (6s)
+# ---------------------------------------------------------------------------
+
+class Scene10_LateDrawdown(Scene):
+    """Pressure continues declining \u2014 proof of continuous monitoring. 2D scene."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+
+        # Title
+        title = Text(
+            "CONTINUOUS MONITORING",
+            font_size=36, color=CYAN_HEX, font="Consolas",
+        )
+        title.to_edge(UP, buff=1.0)
+
+        # Pressure decline sequence
+        readings = [
+            ("Apr 3 11:02", "19.34 BAR", CYAN_HEX),
+            ("Apr 3 12:26", "19.17 BAR", CYAN_HEX),
+            ("Apr 3 14:50", "18.46 BAR", AMBER_HEX),
+            ("Apr 3 16:29", "18.10 BAR", AMBER_HEX),
+        ]
+
+        reading_group = VGroup()
+        for i, (time_str, pressure, color) in enumerate(readings):
+            row = VGroup(
+                Text(time_str, font_size=22, color=DIM_HEX, font="Consolas"),
+                Text(pressure, font_size=26, color=color, font="Consolas"),
+            )
+            row.arrange(RIGHT, buff=0.8)
+            reading_group.add(row)
+
+        reading_group.arrange(DOWN, buff=0.4)
+        reading_group.next_to(title, DOWN, buff=0.8)
+
+        # Bottom note
+        note = Text(
+            "STILL DECLINING AT 16:29  \u2014  THE LINE IS STILL MOVING",
+            font_size=18, color=GREEN_HEX, font="Consolas",
+        )
+        note.to_edge(DOWN, buff=0.8)
+
+        self.play(Write(title), run_time=1.0)
+
+        # Reveal each reading with a stagger
+        for row in reading_group:
+            self.play(FadeIn(row), run_time=0.6)
+            self.wait(0.3)
+
+        self.play(FadeIn(note), run_time=0.8)
+        self.wait(1.5)
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.5)
