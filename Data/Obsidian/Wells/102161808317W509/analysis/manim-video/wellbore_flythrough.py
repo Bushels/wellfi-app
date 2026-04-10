@@ -105,9 +105,10 @@ class Scene0_WellPathTest(ThreeDScene):
         # Camera & background
         # ---------------------------------------------------------------
         self.camera.background_color = BG_HEX
-        self.set_camera_orientation(phi=70 * DEGREES, theta=-60 * DEGREES)
-        # Zoom out a bit so the full well path fits in frame
-        self.camera.frame_center = np.array([-0.8, 2.0, -3.5])
+        self.set_camera_orientation(phi=65 * DEGREES, theta=-50 * DEGREES)
+        # Center on the build section (mid-depth) and zoom in tight
+        self.camera.frame_center = np.array([-0.5, 1.2, -3.3])
+        self.camera.focal_distance = 8.0
 
         # ---------------------------------------------------------------
         # Crop the path to the interesting first 1000 m
