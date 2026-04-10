@@ -1038,4 +1038,125 @@ class Scene10_LateDrawdown(Scene):
 
         self.play(FadeIn(note), run_time=0.8)
         self.wait(1.5)
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
+
+
+# ---------------------------------------------------------------------------
+# Scene 11: Full Well Pullback (8s)
+# ---------------------------------------------------------------------------
+
+class Scene11_Pullback(ThreeDScene):
+    """Camera pulls back to show full well with floating metrics."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+        self.set_camera_orientation(phi=65 * DEGREES, theta=-50 * DEGREES)
+        self.camera.frame_center = np.array([-0.5, 1.2, -3.3])
+        self.camera.focal_distance = 8.0
+
+        # Full cropped well path (full opacity)
+        crop_idx = md_to_index(CROP_MD)
+        path_points = WELL_PATH_3D[:crop_idx + 1]
+        path_md = WELL_MD[:crop_idx + 1]
+        well_path = build_well_path_colored(path_points, path_md)
+
+        # Dotted extension
+        crop_end = path_points[-1]
+        extension_end = crop_end + np.array([1.5, 0.0, 0.0])
+        dotted_ext = build_dotted_extension(crop_end, extension_end, n_dots=14)
+
+        # Formation plane
+        formation_z = -BLUESKY_TOP_TVD / 100.0
+        formation_plane = Surface(
+            lambda u, v: np.array([u, v, formation_z]),
+            u_range=[-3.5, 2.5], v_range=[-0.5, 5.5],
+            fill_color=GREEN_HEX, fill_opacity=0.10,
+            stroke_width=0, checkerboard_colors=False,
+        )
+
+        # WellFi tool (bright cyan glow)
+        wellfi_3d = md_to_3d(WELLFI_POSITION_MD)
+        tool = Sphere(radius=0.14, color=CYAN_HEX)
+        tool.move_to(wellfi_3d.tolist())
+        tool_glow = Sphere(radius=0.28, color=CYAN_HEX)
+        tool_glow.move_to(wellfi_3d.tolist())
+        tool_glow.set_opacity(0.3)
+
+        self.add(well_path, dotted_ext, formation_plane, tool_glow, tool)
+
+        # Floating metric labels (fixed in frame, staggered reveal)
+        metrics = [
+            ("PEAK SIGNAL", "-37 dBV", GREEN_HEX, UP + LEFT),
+            ("LATE PRESSURE", "1810 kPa", CYAN_HEX, UP + RIGHT),
+            ("BEST CRC", "100%", GREEN_HEX, DOWN + LEFT),
+            ("GAS KICK RECOVERY", "7 min", "#dc2626", DOWN + RIGHT),
+        ]
+
+        metric_mobs = []
+        for label_text, value_text, color, edge in metrics:
+            label = Text(label_text, font_size=14, color=DIM_HEX, font="Consolas")
+            value = Text(value_text, font_size=28, color=color, font="Consolas")
+            group = VGroup(label, value).arrange(DOWN, buff=0.15, center=True)
+            group.to_edge(edge, buff=0.8)
+            self.add_fixed_in_frame_mobjects(group)
+            group.set_opacity(0)
+            metric_mobs.append(group)
+
+        # Slow ambient rotation
+        self.begin_ambient_camera_rotation(rate=0.08)
+
+        # Stagger the metrics appearing
+        for i, mob in enumerate(metric_mobs):
+            self.play(mob.animate.set_opacity(1), run_time=0.8)
+            if i < len(metric_mobs) - 1:
+                self.wait(0.3)
+
+        self.wait(2.0)
+        self.stop_ambient_camera_rotation()
+
+        self.play(FadeOut(Group(*self.mobjects)), run_time=1.0)
+
+
+# ---------------------------------------------------------------------------
+# Scene 12: Payoff Title (5s)
+# ---------------------------------------------------------------------------
+
+class Scene12_Payoff(Scene):
+    """Final statement \u2014 the story conclusion."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+
+        # Main statement
+        statement = Text(
+            "Run 3 turned marginal signal\ninto a believable operations story.",
+            font_size=36,
+            color=WHITE_HEX,
+            font="Consolas",
+            line_spacing=1.4,
+        )
+
+        # Brand
+        brand = Text(
+            "WellFi",
+            font_size=48,
+            color=CYAN_HEX,
+            font="Consolas",
+            weight=BOLD,
+        )
+        brand.next_to(statement, DOWN, buff=0.8)
+
+        # Source note
+        source = Text(
+            "Source-locked to field data, packet logs, and directional survey",
+            font_size=16,
+            color=DIM_HEX,
+            font="Consolas",
+        )
+        source.to_edge(DOWN, buff=0.6)
+
+        self.play(FadeIn(statement), run_time=2.0)
+        self.wait(0.5)
+        self.play(FadeIn(brand), run_time=1.0)
+        self.play(FadeIn(source), run_time=0.8)
+        self.wait(1.5)
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.5)
         self.play(FadeOut(Group(*self.mobjects)), run_time=0.5)
