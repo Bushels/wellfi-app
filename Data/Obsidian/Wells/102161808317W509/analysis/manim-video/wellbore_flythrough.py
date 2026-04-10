@@ -270,7 +270,7 @@ class Scene2_WellPathReveal(ThreeDScene):
 
         # 2D labels (fixed in frame)
         label_surface = Text(
-            "SURFACE CASING  126m",
+            "INTERMEDIATE CASING  921m MD",
             font_size=16,
             color=WHITE_HEX,
             font="Consolas",
@@ -377,12 +377,27 @@ class Scene3_BuildCloseUp(ThreeDScene):
         )
         wellfi_label.to_edge(DOWN, buff=0.6)
 
-        self.add_fixed_in_frame_mobjects(inc_label, wellfi_label)
+        # Run 1 failure zone marker at ~550m MD (sonde clamps slid in build section)
+        run1_fail_3d = md_to_3d(550.0)
+        run1_marker = Sphere(radius=0.10, color="#dc2626")
+        run1_marker.move_to(run1_fail_3d.tolist())
+        run1_marker.set_opacity(0)
+
+        run1_label = Text(
+            "RUN 1 FAILURE ZONE",
+            font_size=16,
+            color="#dc2626",
+            font="Consolas",
+        )
+        run1_label.to_edge(RIGHT, buff=0.6)
+
+        self.add_fixed_in_frame_mobjects(inc_label, wellfi_label, run1_label)
         inc_label.set_opacity(0)
         wellfi_label.set_opacity(0)
+        run1_label.set_opacity(0)
 
-        # Start with the full dim path visible
-        self.add(well_path, formation_plane)
+        # Start with the full dim path visible; run1_marker added here at opacity=0
+        self.add(well_path, formation_plane, run1_marker)
 
         # Zoom camera toward the build section center
         build_center = md_to_3d(580.0)  # Midpoint of build section
@@ -390,6 +405,8 @@ class Scene3_BuildCloseUp(ThreeDScene):
         self.play(
             Create(build_highlight),
             inc_label.animate.set_opacity(1),
+            run1_marker.animate.set_opacity(0.85),
+            run1_label.animate.set_opacity(1),
             run_time=2.5,
         )
 
@@ -472,8 +489,19 @@ class Scene4_ToolDescent(ThreeDScene):
         # Signal strength label (fixed in frame)
         signal_label = Text("SIGNAL: —", font_size=18, color=CYAN_HEX, font="Consolas")
         signal_label.to_edge(UP + RIGHT, buff=0.6)
-        self.add_fixed_in_frame_mobjects(signal_label)
+
+        # Signal strength legend — vertical color bar on the left edge
+        legend_title = Text("SIGNAL", font_size=14, color=DIM_HEX, font="Consolas")
+        legend_strong = Text("STRONG\n-37 dBV", font_size=13, color=GREEN_HEX, font="Consolas", line_spacing=1.2)
+        legend_weak   = Text("WEAK\n-55 dBV",   font_size=13, color=AMBER_HEX, font="Consolas", line_spacing=1.2)
+        legend_noise  = Text("NOISE\nFLOOR\n-95 dBV", font_size=13, color="#dc2626", font="Consolas", line_spacing=1.2)
+        legend_group = VGroup(legend_title, legend_strong, legend_weak, legend_noise)
+        legend_group.arrange(DOWN, buff=0.35, center=True)
+        legend_group.to_edge(LEFT, buff=0.4)
+
+        self.add_fixed_in_frame_mobjects(signal_label, legend_title, legend_strong, legend_weak, legend_noise)
         signal_label.set_opacity(0)
+        legend_group.set_opacity(0)
 
         self.add(trail_mob, tool)
 
@@ -482,6 +510,10 @@ class Scene4_ToolDescent(ThreeDScene):
             MoveAlongPath(tool, descent_curve, rate_func=smooth),
             progress.animate.set_value(1.0),
             signal_label.animate.set_opacity(1),
+            legend_title.animate.set_opacity(1),
+            legend_strong.animate.set_opacity(1),
+            legend_weak.animate.set_opacity(1),
+            legend_noise.animate.set_opacity(1),
             run_time=6,
         )
 
@@ -723,11 +755,23 @@ class Scene7_PumpStart(ThreeDScene):
         )
         pressure_text.to_edge(DOWN + LEFT, buff=0.6)
 
-        self.add_fixed_in_frame_mobjects(pump_label, pressure_text)
+        # Marginal signal zone reminder — fixed top-right
+        marginal_label = Text(
+            "MARGINAL SIGNAL ZONE  |  819.9m MD",
+            font_size=16, color="#dc2626", font="Consolas",
+        )
+        marginal_label.to_edge(UP + RIGHT, buff=0.6)
+
+        self.add_fixed_in_frame_mobjects(pump_label, pressure_text, marginal_label)
         pump_label.set_opacity(0)
         pressure_text.set_opacity(0)
+        marginal_label.set_opacity(0)
 
-        self.play(pump_label.animate.set_opacity(1), run_time=0.8)
+        self.play(
+            pump_label.animate.set_opacity(1),
+            marginal_label.animate.set_opacity(1),
+            run_time=0.8,
+        )
         self.wait(0.5)
 
         # Show pressure readout
@@ -806,7 +850,7 @@ class Scene8_Overnight(Scene):
         pressure_after.next_to(arrow, DOWN, buff=0.3)
 
         time_label = Text(
-            "\u22121.18 BAR OVERNIGHT DRAWDOWN",
+            "\u2212118 kPa OVERNIGHT DRAWDOWN",
             font_size=18, color=DIM_HEX, font="Consolas",
         )
         time_label.next_to(pressure_after, DOWN, buff=0.5)
@@ -873,7 +917,7 @@ class Scene9_GasKick(ThreeDScene):
 
         # Phase 1: Normal operation label
         normal_label = Text(
-            "Apr 3, 11:02  |  P: 19.34 BAR  |  NORMAL",
+            "Apr 3, 11:02  |  P: 1934 kPa  |  NORMAL",
             font_size=18, color=CYAN_HEX, font="Consolas",
         )
         normal_label.to_edge(UP, buff=0.5)
@@ -885,7 +929,7 @@ class Scene9_GasKick(ThreeDScene):
 
         # Phase 2: Gas kick begins \u2014 pump stalling
         kick_label = Text(
-            "11:17  |  GAS KICK  |  PUMP STALLING",
+            "11:17  |  GAS KICK  |  PUMP SLOWS DUE TO GAS",
             font_size=22, color=AMBER_HEX, font="Consolas",
         )
         kick_label.to_edge(UP, buff=0.5)
@@ -926,7 +970,7 @@ class Scene9_GasKick(ThreeDScene):
 
         # Phase 3: CRC FAIL \u2014 the dramatic moment
         crc_label = Text(
-            "11:52  |  168.65 BAR  |  CRC FAIL",
+            "11:52  |  16865 kPa  |  CRC FAIL",
             font_size=26, color="#dc2626", font="Consolas",
         )
         crc_label.to_edge(UP, buff=0.5)
@@ -957,7 +1001,7 @@ class Scene9_GasKick(ThreeDScene):
 
         # Phase 4: Recovery \u2014 7 minutes later
         recovery_label = Text(
-            "11:59  |  P: 19.34 BAR  |  RECOVERED",
+            "11:59  |  P: 1934 kPa  |  RECOVERED",
             font_size=22, color=GREEN_HEX, font="Consolas",
         )
         recovery_label.to_edge(UP, buff=0.5)
@@ -1004,10 +1048,10 @@ class Scene10_LateDrawdown(Scene):
 
         # Pressure decline sequence
         readings = [
-            ("Apr 3 11:02", "19.34 BAR", CYAN_HEX),
-            ("Apr 3 12:26", "19.17 BAR", CYAN_HEX),
-            ("Apr 3 14:50", "18.46 BAR", AMBER_HEX),
-            ("Apr 3 16:29", "18.10 BAR", AMBER_HEX),
+            ("Apr 3 11:02", "1934 kPa", CYAN_HEX),
+            ("Apr 3 12:26", "1917 kPa", CYAN_HEX),
+            ("Apr 3 14:50", "1846 kPa", AMBER_HEX),
+            ("Apr 3 16:29", "1810 kPa", AMBER_HEX),
         ]
 
         reading_group = VGroup()
@@ -1127,7 +1171,7 @@ class Scene12_Payoff(Scene):
 
         # Main statement
         statement = Text(
-            "Run 3 turned marginal signal\ninto a believable operations story.",
+            "Surface modifications turned\nmarginal signal into reliable telemetry.",
             font_size=36,
             color=WHITE_HEX,
             font="Consolas",
