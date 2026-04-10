@@ -678,3 +678,152 @@ class Scene6_PulledJoint(ThreeDScene):
 
         self.wait(1.0)
         self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
+
+
+# ---------------------------------------------------------------------------
+# Scene 7: Pump Start Visualization (8s)
+# ---------------------------------------------------------------------------
+
+class Scene7_PumpStart(ThreeDScene):
+    """Pump starts — fluid flow, temperature drop, pressure readout."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+        self.set_camera_orientation(phi=55*DEGREES, theta=-40*DEGREES)
+
+        # Position camera near the tool
+        wellfi_3d = md_to_3d(WELLFI_POSITION_MD)
+        self.camera.frame_center = wellfi_3d.tolist()
+        self.camera.focal_distance = 6.0
+
+        # Local well path (dim)
+        local_start_idx = md_to_index(700.0)
+        crop_idx = md_to_index(CROP_MD)
+        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
+        local_md = WELL_MD[local_start_idx:crop_idx + 1]
+        local_path = build_well_path_colored(local_points, local_md)
+        local_path.set_opacity(0.2)
+
+        # WellFi tool (cyan, at 819.9m MD)
+        tool = Sphere(radius=0.12, color=CYAN_HEX)
+        tool.move_to(wellfi_3d.tolist())
+
+        self.add(local_path, tool)
+
+        # 2D overlay labels (fixed in frame)
+        pump_label = Text(
+            "PUMP START  |  Apr 2, 17:38",
+            font_size=22, color=AMBER_HEX, font="Consolas",
+        )
+        pump_label.to_edge(UP, buff=0.5)
+
+        # Pressure readout — will update
+        pressure_text = Text(
+            "P: 2075 kPa  |  T: 24.8\u00b0C",
+            font_size=20, color=CYAN_HEX, font="Consolas",
+        )
+        pressure_text.to_edge(DOWN + LEFT, buff=0.6)
+
+        self.add_fixed_in_frame_mobjects(pump_label, pressure_text)
+        pump_label.set_opacity(0)
+        pressure_text.set_opacity(0)
+
+        self.play(pump_label.animate.set_opacity(1), run_time=0.8)
+        self.wait(0.5)
+
+        # Show pressure readout
+        self.play(pressure_text.animate.set_opacity(1), run_time=0.8)
+        self.wait(1.0)
+
+        # Cold slug — temperature drops, tool pulses amber
+        cold_slug_text = Text(
+            "COLD SLUG  |  T: 15.2\u00b0C",
+            font_size=20, color=AMBER_HEX, font="Consolas",
+        )
+        cold_slug_text.to_edge(DOWN + LEFT, buff=0.6)
+        self.add_fixed_in_frame_mobjects(cold_slug_text)
+        cold_slug_text.set_opacity(0)
+
+        self.play(
+            pressure_text.animate.set_opacity(0),
+            cold_slug_text.animate.set_opacity(1),
+            tool.animate.set_color(AMBER_HEX),
+            run_time=1.0,
+        )
+        self.wait(0.8)
+
+        # Steady state — temperature recovers
+        steady_text = Text(
+            "STEADY STATE  |  P: 2069 kPa  |  T: 21.6\u00b0C",
+            font_size=20, color=CYAN_HEX, font="Consolas",
+        )
+        steady_text.to_edge(DOWN + LEFT, buff=0.6)
+        self.add_fixed_in_frame_mobjects(steady_text)
+        steady_text.set_opacity(0)
+
+        self.play(
+            cold_slug_text.animate.set_opacity(0),
+            steady_text.animate.set_opacity(1),
+            tool.animate.set_color(CYAN_HEX),
+            run_time=1.0,
+        )
+        self.wait(1.5)
+
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.8)
+
+
+# ---------------------------------------------------------------------------
+# Scene 8: Overnight + Morning (6s)
+# ---------------------------------------------------------------------------
+
+class Scene8_Overnight(Scene):
+    """Time compression: overnight drawdown, morning resume. 2D scene."""
+    def construct(self):
+        self.camera.background_color = BG_HEX
+
+        # Night indicator
+        night_text = Text(
+            "OVERNIGHT",
+            font_size=48, color=DIM_HEX, font="Consolas",
+        )
+
+        # Pressure change
+        pressure_before = Text(
+            "P: 2069 kPa",
+            font_size=28, color=CYAN_HEX, font="Consolas",
+        )
+        pressure_before.next_to(night_text, DOWN, buff=0.8)
+
+        arrow = Text(
+            "\u25bc",
+            font_size=36, color=AMBER_HEX, font="Consolas",
+        )
+        arrow.next_to(pressure_before, DOWN, buff=0.3)
+
+        pressure_after = Text(
+            "P: 1951 kPa",
+            font_size=28, color=AMBER_HEX, font="Consolas",
+        )
+        pressure_after.next_to(arrow, DOWN, buff=0.3)
+
+        time_label = Text(
+            "\u22121.18 BAR OVERNIGHT DRAWDOWN",
+            font_size=18, color=DIM_HEX, font="Consolas",
+        )
+        time_label.next_to(pressure_after, DOWN, buff=0.5)
+
+        # Morning resume
+        morning_text = Text(
+            "Apr 3, 10:56  \u2014  MORNING RESUME",
+            font_size=20, color=GREEN_HEX, font="Consolas",
+        )
+        morning_text.to_edge(DOWN, buff=0.8)
+
+        self.play(FadeIn(night_text), run_time=1.0)
+        self.play(FadeIn(pressure_before), run_time=0.8)
+        self.wait(0.5)
+        self.play(FadeIn(arrow), FadeIn(pressure_after), run_time=1.0)
+        self.play(FadeIn(time_label), run_time=0.8)
+        self.wait(0.8)
+        self.play(FadeIn(morning_text), run_time=0.8)
+        self.wait(1.0)
+        self.play(FadeOut(Group(*self.mobjects)), run_time=0.5)
