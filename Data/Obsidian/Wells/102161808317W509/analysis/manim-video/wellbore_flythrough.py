@@ -275,7 +275,7 @@ class Scene2_WellPathReveal(ThreeDScene):
             color=WHITE_HEX,
             font="Consolas",
         )
-        label_surface.to_edge(UP + LEFT, buff=0.8)
+        label_surface.to_edge(UP, buff=0.6)
 
         label_bluesky = Text(
             "BLUESKY FORMATION  660.5m TVD",
@@ -283,7 +283,7 @@ class Scene2_WellPathReveal(ThreeDScene):
             color=GREEN_HEX,
             font="Consolas",
         )
-        label_bluesky.to_edge(DOWN + LEFT, buff=0.8)
+        label_bluesky.to_edge(DOWN, buff=0.6)
 
         self.add_fixed_in_frame_mobjects(label_surface, label_bluesky)
         label_surface.set_opacity(0)
@@ -389,7 +389,7 @@ class Scene3_BuildCloseUp(ThreeDScene):
             color="#dc2626",
             font="Consolas",
         )
-        run1_label.to_edge(RIGHT, buff=0.6)
+        run1_label.to_edge(DOWN, buff=1.6)
 
         self.add_fixed_in_frame_mobjects(inc_label, wellfi_label, run1_label)
         inc_label.set_opacity(0)
@@ -488,7 +488,7 @@ class Scene4_ToolDescent(ThreeDScene):
 
         # Signal strength label (fixed in frame)
         signal_label = Text("SIGNAL: —", font_size=18, color=CYAN_HEX, font="Consolas")
-        signal_label.to_edge(UP + RIGHT, buff=0.6)
+        signal_label.to_edge(UP, buff=0.6)
 
         # Signal strength legend — vertical color bar on the left edge
         legend_title = Text("SIGNAL", font_size=14, color=DIM_HEX, font="Consolas")
@@ -557,13 +557,12 @@ class Scene5_SignalFailure(ThreeDScene):
         self.camera.frame_center = bottom_3d.tolist()
         self.camera.focal_distance = 6.0
 
-        # Local well path around bottom (last ~200m of crop)
-        local_start_idx = md_to_index(700.0)
+        # Full well path (surface to crop) — keeps casing string visible
         crop_idx = md_to_index(CROP_MD)
-        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
-        local_md = WELL_MD[local_start_idx:crop_idx + 1]
-        local_path = build_well_path_colored(local_points, local_md)
-        local_path.set_opacity(0.3)
+        full_points = WELL_PATH_3D[:crop_idx + 1]
+        full_md = WELL_MD[:crop_idx + 1]
+        local_path = build_well_path_colored(full_points, full_md)
+        local_path.set_opacity(0.25)
 
         # Formation plane
         formation_z = -BLUESKY_TOP_TVD / 100.0
@@ -630,13 +629,12 @@ class Scene6_PulledJoint(ThreeDScene):
         self.camera.frame_center = bottom_3d.tolist()
         self.camera.focal_distance = 6.0
 
-        # Local well path
-        local_start_idx = md_to_index(700.0)
+        # Full well path (surface to crop) — keeps casing string visible
         crop_idx = md_to_index(CROP_MD)
-        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
-        local_md = WELL_MD[local_start_idx:crop_idx + 1]
-        local_path = build_well_path_colored(local_points, local_md)
-        local_path.set_opacity(0.3)
+        full_points = WELL_PATH_3D[:crop_idx + 1]
+        full_md = WELL_MD[:crop_idx + 1]
+        local_path = build_well_path_colored(full_points, full_md)
+        local_path.set_opacity(0.25)
 
         # Formation plane
         formation_z = -BLUESKY_TOP_TVD / 100.0
@@ -727,12 +725,11 @@ class Scene7_PumpStart(ThreeDScene):
         self.camera.frame_center = wellfi_3d.tolist()
         self.camera.focal_distance = 6.0
 
-        # Local well path (dim)
-        local_start_idx = md_to_index(700.0)
+        # Full well path (surface to crop) — keeps casing string visible
         crop_idx = md_to_index(CROP_MD)
-        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
-        local_md = WELL_MD[local_start_idx:crop_idx + 1]
-        local_path = build_well_path_colored(local_points, local_md)
+        full_points = WELL_PATH_3D[:crop_idx + 1]
+        full_md = WELL_MD[:crop_idx + 1]
+        local_path = build_well_path_colored(full_points, full_md)
         local_path.set_opacity(0.2)
 
         # WellFi tool (cyan, at 819.9m MD)
@@ -753,14 +750,14 @@ class Scene7_PumpStart(ThreeDScene):
             "P: 2075 kPa  |  T: 24.8\u00b0C",
             font_size=20, color=CYAN_HEX, font="Consolas",
         )
-        pressure_text.to_edge(DOWN + LEFT, buff=0.6)
+        pressure_text.to_edge(DOWN, buff=0.6)
 
         # Marginal signal zone reminder — fixed top-right
         marginal_label = Text(
             "MARGINAL SIGNAL ZONE  |  819.9m MD",
             font_size=16, color="#dc2626", font="Consolas",
         )
-        marginal_label.to_edge(UP + RIGHT, buff=0.6)
+        marginal_label.to_edge(DOWN, buff=1.8)
 
         self.add_fixed_in_frame_mobjects(pump_label, pressure_text, marginal_label)
         pump_label.set_opacity(0)
@@ -783,7 +780,7 @@ class Scene7_PumpStart(ThreeDScene):
             "COLD SLUG  |  T: 15.2\u00b0C",
             font_size=20, color=AMBER_HEX, font="Consolas",
         )
-        cold_slug_text.to_edge(DOWN + LEFT, buff=0.6)
+        cold_slug_text.to_edge(DOWN, buff=0.6)
         self.add_fixed_in_frame_mobjects(cold_slug_text)
         cold_slug_text.set_opacity(0)
 
@@ -800,7 +797,7 @@ class Scene7_PumpStart(ThreeDScene):
             "STEADY STATE  |  P: 2069 kPa  |  T: 21.6\u00b0C",
             font_size=20, color=CYAN_HEX, font="Consolas",
         )
-        steady_text.to_edge(DOWN + LEFT, buff=0.6)
+        steady_text.to_edge(DOWN, buff=0.6)
         self.add_fixed_in_frame_mobjects(steady_text)
         steady_text.set_opacity(0)
 
@@ -887,12 +884,11 @@ class Scene9_GasKick(ThreeDScene):
         self.camera.frame_center = wellfi_3d.tolist()
         self.camera.focal_distance = 6.0
 
-        # Local well path (dim)
-        local_start_idx = md_to_index(700.0)
+        # Full well path (surface to crop) — keeps casing string visible
         crop_idx = md_to_index(CROP_MD)
-        local_points = WELL_PATH_3D[local_start_idx:crop_idx + 1]
-        local_md = WELL_MD[local_start_idx:crop_idx + 1]
-        local_path = build_well_path_colored(local_points, local_md)
+        full_points = WELL_PATH_3D[:crop_idx + 1]
+        full_md = WELL_MD[:crop_idx + 1]
+        local_path = build_well_path_colored(full_points, full_md)
         local_path.set_opacity(0.2)
 
         # Formation plane
@@ -1046,12 +1042,12 @@ class Scene10_LateDrawdown(Scene):
         )
         title.to_edge(UP, buff=1.0)
 
-        # Pressure decline sequence
+        # Pressure timeline — extended through Apr 4 with latest event log data
         readings = [
             ("Apr 3 11:02", "1934 kPa", CYAN_HEX),
-            ("Apr 3 12:26", "1917 kPa", CYAN_HEX),
-            ("Apr 3 14:50", "1846 kPa", AMBER_HEX),
-            ("Apr 3 16:29", "1810 kPa", AMBER_HEX),
+            ("Apr 3 16:50", "1810 kPa", AMBER_HEX),
+            ("Apr 3 23:17", "1963 kPa", GREEN_HEX),
+            ("Apr 4 00:29", "1956 kPa", GREEN_HEX),
         ]
 
         reading_group = VGroup()
@@ -1066,9 +1062,9 @@ class Scene10_LateDrawdown(Scene):
         reading_group.arrange(DOWN, buff=0.4)
         reading_group.next_to(title, DOWN, buff=0.8)
 
-        # Bottom note
+        # Bottom note — tool still alive as of Apr 9
         note = Text(
-            "STILL DECLINING AT 16:29  \u2014  THE LINE IS STILL MOVING",
+            "TOOL STILL TRANSMITTING  \u2014  8 DAYS AND COUNTING",
             font_size=18, color=GREEN_HEX, font="Consolas",
         )
         note.to_edge(DOWN, buff=0.8)
