@@ -358,19 +358,9 @@ class Scene2_WellPathReveal(WellFiBase3DScene):
 
         path, extension, plane = self.build_world(opacity=0.96, thickness=0.04, plane_opacity=0.11)
 
-        # Both tool positions
-        bottom_point = md_to_3d(WELLFI_ON_BOTTOM_MD)
+        # Single tool marker at the pulled position (the story's answer)
         pulled_point = md_to_3d(WELLFI_POSITION_MD)
-        bottom_core, bottom_glow = build_tool_marker(bottom_point, core_color=CRIMSON_HEX, glow_opacity=0.18)
         pulled_core, pulled_glow = build_tool_marker(pulled_point, core_color=CYAN_HEX, glow_opacity=0.24)
-
-        shift_line = Line3D(
-            start=bottom_point.tolist(),
-            end=pulled_point.tolist(),
-            color=AMBER_HEX,
-            thickness=0.045,
-        )
-        shift_line.set_opacity(0.88)
 
         # Centered labels
         label_casing = make_text_line(
@@ -400,9 +390,7 @@ class Scene2_WellPathReveal(WellFiBase3DScene):
         )
         self.play(label_bluesky.animate.set_opacity(1), run_time=0.8)
         self.play(
-            FadeIn(bottom_glow), FadeIn(bottom_core),
             FadeIn(pulled_glow), FadeIn(pulled_core),
-            Create(shift_line),
             run_time=1.0,
         )
         self.begin_ambient_camera_rotation(rate=0.10)
@@ -436,11 +424,6 @@ class Scene3_BuildCloseUp(WellFiBase3DScene):
                 thickness=0.055,
             )
             build_highlight.add(seg)
-
-        # Tool at final position
-        tool_core, tool_glow = build_tool_marker(
-            md_to_3d(WELLFI_POSITION_MD), core_color=CYAN_HEX, glow_opacity=0.22
-        )
 
         # Run 1 failure zone at 550m MD
         run1_3d = md_to_3d(550.0)
@@ -482,8 +465,6 @@ class Scene3_BuildCloseUp(WellFiBase3DScene):
             run_time=2.0,
         )
         self.play(
-            FadeIn(tool_glow),
-            FadeIn(tool_core),
             wellfi_label.animate.set_opacity(1),
             run_time=1.0,
         )
@@ -753,7 +734,7 @@ class Scene6_PulledJoint(WellFiBase3DScene):
 
         after_panel = make_panel(
             "After pull",
-            ["Landing: 819.9 m", "CRC: 77%", "Payloads/hr: 2.3"],
+            ["Landing: 819.9 m", "CRC: 77%"],
             accent=CYAN_HEX,
         )
         after_panel.scale(0.82)
