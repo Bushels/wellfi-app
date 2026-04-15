@@ -6,7 +6,13 @@
 
 ## 1. Vision
 
-Build a reusable multi-agent discussion system where petroleum engineering specialists debate complex cross-discipline questions under the guidance of a Lead Engineer moderator. The system uses a Relevance-Weighted Cascade protocol where the most qualified specialist speaks first, subsequent specialists react to what came before (not in isolation), and opinions are weighted by their proximity to the core question. Gemini 3.1 Pro serves as the Lead Engineer's advisor — reviewing the final consensus for blind spots after the discussion concludes.
+Build a reusable multi-agent discussion system where petroleum engineering specialists debate complex cross-discipline questions under the guidance of a Lead Engineer moderator. The system uses a Relevance-Weighted Cascade protocol where the most qualified specialist speaks first, subsequent specialists react to what came before (not in isolation), and opinions are weighted by their proximity to the core question.
+
+### Post-Validation Amendments (from 3 roundtable iterations)
+
+- **All specialists use Opus.** Sonnet produced 600x calculation errors, shallow physics, and optimistic estimates. Opus produced zero arithmetic errors, identified the critical transverse-gravity insight at 86 deg, and gave honest efficiency estimates. Non-negotiable for engineering roundtables.
+- **Gemini is optional, not mandatory.** Gemini failed adversarial review 0/3 times across 2 roundtables (validates instead of challenges, or hallucinates unrelated content). The Lead Engineer performs the adversarial assessment directly.
+- **Product constraints must be in the Lead Engineer's context.** RT1 recommended ESPCP which would eliminate WellFi's market. The Lead Engineer now carries WellFi product context.
 
 ## 2. Components
 

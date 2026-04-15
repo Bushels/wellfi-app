@@ -48,8 +48,7 @@ As the Lead Engineer:
 ### Step 2: PRIMARY RESPONSE (Phase 2)
 
 Dispatch the 1st-order specialist using the Agent tool:
-- `model: "opus"` for 1st and 2nd order specialists (they anchor the discussion and must follow hard rules like no-manual-arithmetic reliably)
-- `model: "sonnet"` acceptable for 3rd and 4th order specialists (shorter, less critical responses)
+- `model: "opus"` for ALL specialist agents in the roundtable — no exceptions. RT2 vs RT3 comparison proved that Sonnet produces calculation errors (600x velocity mistake), shallow physics (symmetric lip when asymmetric was required), and optimistic estimates (10-25% when 5-15% was honest). Opus costs more tokens but produces engineering-grade analysis. All specialists must operate at the same level of rigor to maintain discussion quality.
 - Include their agent definition as context
 - Include ROUNDTABLE.md as shared identity
 - The question should be the original roundtable question
