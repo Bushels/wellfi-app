@@ -7,6 +7,7 @@ tools: [Read, Grep, Glob, WebSearch, WebFetch, Bash]
 knowledge:
   - petro-roundtable/knowledge/bluesky-formation.md
   - petro-roundtable/knowledge/obsidian-energy.md
+  - petro-roundtable/knowledge/wellfi-telemetry.md
   - petro-roundtable/ROUNDTABLE.md
 gemini_review: true
 ---

@@ -6,6 +6,7 @@ model: claude-opus-4-6
 tools: [Read, Grep, Glob, WebSearch, WebFetch, Bash]
 knowledge:
   - petro-roundtable/knowledge/bluesky-formation.md
+  - petro-roundtable/knowledge/foamy-oil-dynamics.md
   - petro-roundtable/ROUNDTABLE.md
 gemini_review: true
 ---
