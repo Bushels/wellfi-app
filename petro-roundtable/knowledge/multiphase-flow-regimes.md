@@ -1315,3 +1315,234 @@ Both test facilities required active temperature control because viscosity is a 
 
 *Section 4 last updated: 2026-04-14. Sources: SPE-102727-PA (Gokcal et al. 2008) and Heat Mass Transfer DOI 10.1007/s00231-017-2158-5 (Baba et al. 2017). Bluesky application statements are extrapolated beyond tested viscosity ranges and should be treated as directional engineering judgment, not validated predictions.*
 
+# Orinoco Belt Heavy Oil Flow Data — Supplemental KB
+
+> Source: SPE-69715, "Heavy Oil Solution Gas Drive in the Venezuelan Orinoco Belt: Laboratory Experiments
+> and Field Simulation" — L. Andarcia, A.M. Kamp, P. Vaca (PDVSA Intevep), 2001 SPE Thermal &
+> Heavy Oil Symposium, Porlamar, Margarita Island, Venezuela.
+>
+> **Correction to prompt metadata:** Paper is Andarcia, Kamp & Vaca (PDVSA Intevep), NOT Bora, Maini & Chakma.
+> The Bora, Maini & Chakma 2001 paper on Orinoco is a separate document.
+>
+> Role in KB: Bridges the viscosity gap between our validated Gokcal data (≤6,000 cP) and Bluesky
+> field conditions (~80,000 cP). Provides lab depletion + field simulation at ~1,000 cP oil (Orinoco)
+> in a foamy oil / solution gas drive analog, with compaction effects that are directly relevant.
+
+---
+
+## 1. Oil Properties
+
+| Parameter | Value | Notes |
+|---|---|---|
+| Reservoir depth | 2,250 ft (~686 m) | Orinoco Belt, typical block |
+| Reservoir temperature | 129°F (~54°C) | Much warmer than Bluesky (~10–12°C) |
+| API gravity | ~10° API | Orinoco heavy crude |
+| Porosity | 30% | Unconsolidated sand, similar to Bluesky |
+| Permeability | 12–14 Darcy | Extremely high — unconsolidated |
+| Pay zone thickness | 300 ft (~91 m) | Thick stacked pay |
+| Initial pressure | 1,000 psia (~6,895 kPa) | Substantially above Bluesky (~3,100 kPa BPP) |
+| Solution GOR (Rsi) | Implied from lab BPP ~700 psig → breakthrough | Low GOR, moderate supersaturation |
+| Initial oil saturation | Set at 0.66 cc/hr production rate in lab | — |
+| Oil viscosity | ~1,000 cP at reservoir conditions | **Estimated from API + T; not directly stated** |
+| Average production per well | 240 STB/D | Field-scale, ~250 wells in simulated area |
+| Number of wells (simulation) | 250 | — |
+
+(Andarcia, Kamp & Vaca 2001, SPE-69715, Table 1 and p.1)
+
+**Bluesky comparison:** Orinoco oil is ~10° API vs. Bluesky ~10–11° API — essentially identical API gravity.
+Orinoco reservoir temperature (54°C) is 4–5× warmer than Bluesky (~10–12°C). Since dead oil viscosity
+is exponentially sensitive to temperature, Orinoco live oil (~1,000 cP) is orders of magnitude less
+viscous than Bluesky live oil (~50,000–80,000 cP) despite nearly identical API. This is the key
+limitation of the Orinoco analog for direct quantitative transfer to Bluesky.
+
+---
+
+## 2. Production Mechanism — Foamy Oil / Solution Gas Drive
+
+The paper explicitly studies **solution gas drive** in heavy oil reservoirs referred to as **"foamy oil reservoirs."**
+This is the same mechanism operative in Peace River Bluesky CHOPS wells.
+
+Key characteristics observed:
+- High recovery factors (higher than conventional material balance predicts)
+- High initial production rates
+- **Low critical gas saturation** (Sgc): gas remains dispersed in oil as microbubbles, delaying free gas flow
+- **Anomalous GOR behavior:** GOR stays suppressed then rises sharply after Sgc is reached
+- Depletion tests show "much higher recovery and critical gas saturation than depletion without stress"
+
+(Andarcia, Kamp & Vaca 2001, SPE-69715, Abstract and p.1)
+
+### Compaction Effects on Foamy Oil (Critical Finding)
+
+The paper's central contribution is demonstrating that **compaction amplifies foamy oil recovery:**
+
+- **Experiment #1 (controlled confinement pressure):** Recovery factor = **25%** OOIP
+- **Experiment #2 (rigid core holder, no compaction):** Recovery factor = **9%** OOIP
+- Compaction (overburden stress relief as reservoir depletes) provides an additional drive energy that
+  increases oil recovery by ~2.8× and raises the critical gas saturation from 8.3% to 24.7%
+
+(Andarcia, Kamp & Vaca 2001, SPE-69715, Table 4)
+
+### Core Physical Properties Used in Experiments
+
+| Test | Controlled Stress | Length (cm) | Area (cm²) | Pore Vol (cc) | Porosity (%) | Kabs (D) | Ko @ Swi (D) | Swi (%) |
+|---|---|---|---|---|---|---|---|---|
+| #1 | Yes | 42.5 | 11.34 | 192 | 39 | 6.7 | 5.8 | 0.06 |
+| #2 | No | 50 | 23.75 | 485 | 38 | 11.0 | 10.5 | 0.03 |
+
+(Andarcia, Kamp & Vaca 2001, SPE-69715, Table 2)
+
+---
+
+## 3. Depletion Experiment Results — Key Numerical Data
+
+### Experiment #1 (With Compaction — Controlled Confinement)
+
+| Parameter | Value |
+|---|---|
+| Initial pressure | ~1,200 psi (~8,274 kPa) |
+| Critical supersaturation pressure | 700 psig |
+| Maximum supersaturation | 280 psig (~1,931 kPa) |
+| Sgc pressure | 300 psig (~2,068 kPa) |
+| Critical gas saturation (Sgc) | 24.7% |
+| Recovery factor | **25% OOIP** |
+| GOR peak (at Sgc breakthrough) | ~310 scf/STB |
+| GOR after breakthrough | Drops sharply to ~30–50 scf/STB, then slowly rises to ~60 scf/STB |
+
+(Andarcia, Kamp & Vaca 2001, SPE-69715, Table 4, Figs. 3–5)
+
+### Experiment #2 (Rigid Core Holder — No Compaction)
+
+| Parameter | Value |
+|---|---|
+| Initial pressure | ~1,200 psi (~8,274 kPa) |
+| Critical supersaturation pressure | 700 psig |
+| Maximum supersaturation | 280 psig (~1,931 kPa) |
+| Sgc pressure | 620 psig (~4,275 kPa) |
+| Critical gas saturation (Sgc) | 8.3% |
+| Recovery factor | **9% OOIP** |
+| GOR peak | ~700 pcm/bbl (~700 scf/STB), very sharp spike |
+| GOR after breakthrough | Drops to ~50–75 scf/STB immediately |
+
+(Andarcia, Kamp & Vaca 2001, SPE-69715, Table 4, Figs. 7–8)
+
+### GOR Behavior Signature (Both Tests)
+
+A diagnostic feature of foamy oil depletion: GOR spikes sharply at Sgc then collapses immediately. This is
+opposite to conventional gas cap or solution gas drive behavior where GOR rises monotonically. The spike
+represents free gas breaking through; the collapse is foamy oil re-establishing dispersed flow. The paper
+states the retained gas (dispersed microbubbles) acts to increase system compressibility, yielding higher
+recovery. (Andarcia, Kamp & Vaca 2001, SPE-69715, p.2–4)
+
+---
+
+## 4. Supersaturation Dynamics
+
+The paper provides detailed discussion of supersaturation as the key foamy oil parameter:
+
+- **Maximum supersaturation (both tests): 280 psig (~1,931 kPa)** above equilibrium bubble point
+- Supersaturation drives nucleation rate (4th-order dependence on supersaturation per Bluesky KB)
+- Higher supersaturation → more bubble nucleation → more dispersed gas → higher compressibility → higher recovery
+- Compaction test (#1) maintains higher supersaturation longer because pore volume decreases relieve
+  local pressure, allowing more gas to exsolve into the foamy state before reaching Sgc
+
+The paper explicitly states: "The early stage of field production could well be characterized by foamy
+oil behavior. At that stage, recovery is mainly due to the expansion of the trapped gas phase."
+(Andarcia, Kamp & Vaca 2001, SPE-69715, p.4)
+
+---
+
+## 5. Field Simulation Match
+
+### Simulated Area: Orinoco Belt, 7–8 Year Production History
+
+The field simulation matched production history for a region of the Orinoco Belt with:
+- **250 producing wells**
+- **~240 STB/D average production per well**
+- 7–8 years production history available for matching
+
+The simulation used **gas-oil relative permeability end-points** derived from the laboratory depletion
+experiments. Key finding: field-derived GOR (from history matching) required a **higher Sg end-point**
+than the lab experiments provided. The paper attributes this to:
+
+1. Coarse simulation grid in the wellbore region (near-wellbore resolution problem)
+2. Difficulty scaling laboratory measurements to field scale
+
+The GOR match (Fig. 9) shows: field GOR rises from ~0 to peak ~0.35–0.5 Mscf/STB over 1992–1998,
+then stabilizes around 0.25 Mscf/STB to 2002. Simulation matched within acceptable bounds after
+relative permeability adjustment. (Andarcia, Kamp & Vaca 2001, SPE-69715, p.4–5, Fig. 9)
+
+### Recovery Factor from Field Simulation
+
+Field simulation predicted recovery of **19% OOIP**, falling between:
+- Lab experiment with compaction (25%)
+- Lab experiment without compaction (9%)
+
+The 19% field estimate was validated against a complementary approach using compressibility measurements.
+The authors concluded that "compaction is not as strong as believed by the high compressibility
+measurement" — meaning field pore compressibility is intermediate between the two lab extremes.
+(Andarcia, Kamp & Vaca 2001, SPE-69715, p.4)
+
+---
+
+## 6. Flow Regime Observations
+
+**Critical gap:** The paper does NOT contain pipe-flow multiphase flow regime data (no slug flow,
+no flow pattern maps, no holdup correlations, no pressure gradient measurements in tubing). This is
+a core-flood / reservoir depletion study. All "flow" observations are pore-scale or reservoir-scale.
+
+Observable flow behaviors at reservoir/core scale:
+- Gas remains dispersed as microbubbles below Sgc (foamy flow)
+- Sgc breakthrough manifests as a sharp GOR pulse, not gradual transition
+- After breakthrough, residual gas in pore throats continues to contribute via compressibility
+- Pressure fluctuations observed in pressure drop trace (Fig. 3, Fig. 6) — interpreted as gas slug
+  release events at pore scale, not tubing-scale slugs
+
+(Andarcia, Kamp & Vaca 2001, SPE-69715, Figs. 3, 6)
+
+---
+
+## 7. Applicability to Bluesky Downhole Separator Design
+
+### Direct Transfers
+
+| Finding | Orinoco Value | Bluesky Application |
+|---|---|---|
+| Sgc with compaction | 24.7% | Compacting unconsolidated sand → high Sgc → substantial free gas may exist in reservoir near wellbore |
+| Sgc without compaction | 8.3% | Lower bound for Bluesky (Bluesky is also unconsolidated, compaction expected) |
+| GOR spike at breakthrough | Sharp pulse then collapse | Expect episodic free gas slugs at pump intake, not continuous gas flow |
+| Recovery factor range | 9–25% (lab); 19% (field) | Consistent with Peace River CHOPS range (5–15% average per foamy-oil-dynamics.md KB); compaction and wormholes are additive mechanisms |
+| Foamy oil early stage | Pure expansion drive | First months of CHOPS = foamy oil. Gas is dispersed, not free. Separator sees very little free gas initially. |
+
+### Key Differences — Limits on Direct Quantitative Transfer
+
+| Factor | Orinoco (SPE-69715) | Bluesky | Impact on Analogy |
+|---|---|---|---|
+| Oil viscosity | ~1,000 cP (estimated) | ~50,000–80,000 cP | 50–80× difference — all pore-scale velocities and bubble rise rates scale inversely |
+| Reservoir temperature | 129°F (54°C) | ~50°F (10°C) | Temperature drives viscosity gap; also affects GOR and Bo |
+| Depth | 2,250 ft (686 m) | ~600–800 m TVD | Comparable — similar pressure range |
+| Production mechanism | Pure solution gas drive (lab) + compaction | CHOPS — sand co-production + wormholes + foamy flow | Wormhole channeling fundamentally alters Sgc and flow paths in Bluesky |
+| Permeability | 6.7–11 Darcy | 1–5 Darcy (Bluesky) | Orinoco is higher perm; flow velocities and bubble coalescence rates differ |
+| GOR magnitude | ~240 STB/D; 0.25–0.5 Mscf/STB field | ~7–10 m3/m3 solution GOR | Orders of magnitude lower GOR in Bluesky — confirms foamy retention dominance |
+| No tubing flow data | Core flood only | Need tubing flow regimes | Cannot transfer Orinoco data directly to WellFi or separator design |
+
+### Separator Design Implication
+
+The Orinoco data reinforces a key downhole-separation.md finding: gas arrives episodically (GOR spike
+at Sgc breakthrough, then suppressed). This means:
+
+1. **Gas slugs are intermittent, not steady-state** — separator must handle pulse events, not continuous throughput
+2. **Foamy oil dominates early life** — separator efficiency near zero in first months (gas is dispersed, won't separate by gravity at any viscosity)
+3. **Compaction increases Sgc** — Peace River Bluesky (unconsolidated, depleting) likely has Sgc toward the 20–25% range, meaning substantial reservoir-scale gas is retained before wellbore arrival
+4. **Viscosity renders gravity separation moot at all stages** — even if free gas reaches the separator, Stokes' rise velocity at 80,000 cP is ~0 (confirmed by bubble-dynamics-reference.md and gemini-audit-challenges.md)
+
+(Synthesis from Andarcia, Kamp & Vaca 2001 + cross-reference to existing KB)
+
+---
+
+## 8. Recommended Use of This Supplement
+
+- **Load alongside:** `foamy-oil-dynamics.md` (kinetics), `downhole-separation.md` (design), `gemini-audit-challenges.md`
+- **Cite when:** Discussing Sgc values, compaction drive, GOR behavior signatures, recovery factor bounds
+- **Do NOT cite for:** Pipe-flow pressure gradients, tubing slug frequency, holdup correlations — no such data exists in this paper
+- **Viscosity gap status:** This paper covers ~1,000 cP. Our Gokcal data covers up to 6,000 cP. The 6,000–80,000 cP range remains unvalidated by any paper in the current KB. The Bora, Maini & Chakma 2001 paper (separate from SPE-69715) may contain that data if located.
+
