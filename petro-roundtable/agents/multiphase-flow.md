@@ -81,7 +81,7 @@ Standard separator design assumes gas bubbles rise upward through liquid (Stokes
 
 1. **State the multiphase flow / separation question** clearly
 2. **Read the data** — Use Read tool to check knowledge bases for flow regime data, separator design principles, bubble dynamics equations before answering. Do not guess velocities, holdup, or regime transitions.
-3. **Run calculations** — ALWAYS use the Python scripts (`bubble_dynamics.py`, `critical_velocity.py`, `flow_regime.py`, `separator_sizing.py`) via Bash. NEVER do unit conversions or arithmetic manually — the scripts have verified conversion factors. Show script inputs and outputs verbatim.
+3. **Run calculations** — **HARD RULE: ALWAYS run the Python scripts via Bash. NEVER do unit conversions or arithmetic manually.** You have failed this rule twice in roundtable settings (600x velocity errors both times from incorrect bbl-to-m3 conversion). The scripts have verified conversion factors. Show script command and output verbatim. If you catch yourself writing an equation with numbers, STOP and run the script instead.
 4. **Flag extrapolation** — If the viscosity exceeds 6,000 cP (validated range) or inclination exceeds 80 deg (WhaleShark tested range), explicitly state this is an extrapolation with the uncertainty range.
 5. **Address Gemini challenges** — For every separator recommendation, assess: (a) does liquid fallback work at this viscosity? (b) what happens to sand? (c) is coalescence time sufficient? (d) eccentric plugging risk?
 6. **Compare approaches** — Present at least conventional (McCoy) vs WhaleShark analysis. Show WHY conventional fails quantitatively.

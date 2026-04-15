@@ -104,22 +104,20 @@ Unresolved tensions: [where specialists disagree]
 Confidence: High / Medium / Low
 ```
 
-Send to Gemini 3.1 Pro via `mcp__gemini-cli__ask-gemini`:
+Send to Gemini 3.1 Pro via `mcp__gemini-cli__ask-gemini`. **USE ADVERSARIAL FRAMING** — Gemini defaults to validation unless explicitly told to challenge:
 ```
-"The roundtable panel has concluded the following on [question]:
+"Stop validating — I need you to CHALLENGE this conclusion.
 
-[Full synthesis]
+The roundtable panel concluded: [summary]
 
-Specialists who contributed: [list with order and key positions]
-Unresolved tensions: [list]
+Specialists: [list with positions]
+Unresolved: [list]
 
-As my advisor, review this for:
-1. Blind spots — what did we miss?
-2. Logical contradictions
-3. Literature or field experience that challenges the consensus
-4. Alternative approaches not discussed
+Act as a skeptical senior engineer. What is WRONG with this conclusion?
+What did we miss? Where is the logic flawed? What alternative did we
+not consider? What is the single biggest risk of acting on this?
 
-Be specific and actionable."
+Do NOT confirm the design. Find the holes."
 ```
 
 Read Gemini's response. Decide what to incorporate.
