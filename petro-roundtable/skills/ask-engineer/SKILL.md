@@ -38,6 +38,8 @@ Route a question to a single specialist agent from the petroleum engineering rou
    | `economics` | `agents/economics-reserves.md` |
    | `simulation` | `agents/simulation-engineer.md` |
    | `production-data` | `agents/production-data.md` |
+   | `multiphase-flow` | `agents/multiphase-flow.md` |
+   | `lead` | `agents/lead-engineer.md` |
 
    If the agent file does not exist, respond:
    > "The **[specialty]** agent is not yet available. Available specialists: [list agents found in petro-roundtable/agents/]."
@@ -73,6 +75,7 @@ Route a question to a single specialist agent from the petroleum engineering rou
 | `economics` | `agents/economics-reserves.md` | **Active** | COGEH/NI 51-101, WCS pricing, break-even, F&D, NPV |
 | `simulation` | `agents/simulation-engineer.md` | **Active** | CMG STARS/IMEX, thermal modeling, foamy oil, multiphase flow |
 | `production-data` | `agents/production-data.md` | **Active** | SCADA, analytics, dashboards, data quality, WellFi integration |
+| `multiphase-flow` | `agents/multiphase-flow.md` | **Active** | Wellbore flow regimes, separator design, bubble dynamics, BHA integration |
 
 ## Future Specialists (Phase 4)
 

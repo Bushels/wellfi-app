@@ -17,7 +17,7 @@
 ## Active Phase
 
 **Phase 3.75: Multiphase Flow Specialist** (complete)
-**Phase 4: Roundtable Orchestration** (next)
+**Phase 4: Roundtable Orchestration** (complete)
 
 ### Completed Phases
 - Phase 1: Bluesky Formation Mastery — 10/10 validation, Gemini audited
@@ -38,7 +38,7 @@
 | Simulation Engineer | **Active** | 3 | claude-opus-4-6 | CMG STARS/IMEX, thermal modeling, foamy oil, multiphase flow |
 | Production Data | **Active** | 3 | claude-opus-4-6 | SCADA, analytics, dashboards, data quality, WellFi integration |
 | Multiphase Flow | **Active** | 3.75 | claude-opus-4-6 | Wellbore flow regimes, bubble dynamics, downhole separator design, BHA integration |
-| Lead Engineer | Planned | 4 | claude-opus-4-6 | Orchestration, routing, synthesis, arbitration, regulatory integration |
+| Lead Engineer | **Active** | 4 | claude-opus-4-6 | Roundtable moderator, relevance-weighted cascade, cross-discipline synthesis |
 
 ## Operator Representatives
 
@@ -57,6 +57,7 @@
 | `ask-engineer` | Active | Route questions to the correct petroleum engineering specialist |
 | `ask-operator` | Active | Route questions to an operator representative |
 | `wellfi-storyboard-audit` | Active | Validate customer-facing WellFi storyboard, narrative, and Remotion claims against approved evidence before animation or rendering |
+| `roundtable` | Active | Multi-agent roundtable discussion with Lead Engineer moderator, relevance-weighted cascade, Gemini advisor |
 
 **Run 3 visual-story workflow:** For Obsidian well `102161808317W509`, use `wellfi-storyboard-audit` before changing any storyboard or Remotion scene. Preserve legacy compositions and create run-scoped replacements instead of overwriting older story files.
 

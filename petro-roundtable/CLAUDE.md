@@ -70,6 +70,7 @@ petro-roundtable/
     simulation-engineer.md ← Phase 3: CMG STARS, thermal, foamy oil
     production-data.md    ← Phase 3: SCADA, analytics, dashboards
     multiphase-flow.md   ← Phase 3.75: Wellbore flow, separator design, bubble dynamics
+    lead-engineer.md     ← Phase 4: Roundtable moderator, relevance-weighted cascade
   operators/             ← Operator representative agents (Phase 2+)
     obsidian-energy.md   ← Phase 2: Obsidian Energy operator rep
   knowledge/             ← Curated knowledge bases (verified, cited)
@@ -86,6 +87,7 @@ petro-roundtable/
     bluesky-briefing/    ← /bluesky-briefing — formation deep-dive
     ask-engineer/        ← /ask-engineer — route question to specialist
     ask-operator/        ← /ask-operator — route question to operator rep
+    roundtable/          ← /roundtable — multi-agent moderated discussion
   calculations/          ← Python CLI scripts (run via Bash)
     decline_curves.py    ← Arps decline fitting, EUR estimation
     nodal_analysis.py    ← Vogel/Darcy IPR, VLP, operating point
