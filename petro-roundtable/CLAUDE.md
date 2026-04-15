@@ -33,6 +33,23 @@ A Claude Code native petroleum engineering roundtable — a panel of AI speciali
 - 18 additional calculation gaps flagged across 8 agents (see CONFIG.md)
 - Knowledge loading: all load bluesky-formation.md + ROUNDTABLE.md; 6 of 8 also load obsidian-energy.md (geomechanics and simulation exempt — pure physics agents)
 
+**Phase 3.75: Multiphase Flow Specialist — COMPLETE (2026-04-15)**
+- 10th specialist agent: downhole multiphase flow, gas-liquid separation, bubble dynamics
+- 22 papers + 1 book distilled via 9 parallel Sonnet subagents into 4 new KBs + 2 enhanced KBs (~4,000 lines)
+- 4 new calculation scripts (bubble_dynamics, critical_velocity, flow_regime, separator_sizing)
+- Gemini 3.1 Pro adversarial audit: 5 engineering challenges documented
+- Key finding: gravity-based gas separation is physically impossible at 80,000 cP. Liquid fallback (WhaleShark-type) is the only viable mechanism.
+- Design doc: `docs/plans/2026-04-15-multiphase-flow-specialist-design.md`
+
+**Phase 3.5: SPE Paper Knowledge Enrichment — COMPLETE (2026-04-08)**
+- 11 SPE papers distilled into 3 new knowledge bases (~680 lines total)
+- `foamy-oil-dynamics.md`: 6 Bluesky papers — kinetic model, wormholes, CSS context
+- `pcp-operations.md`: 5 PCP papers — DLS thresholds, ESPCP vs rod-driven, C-FER fatigue method
+- `wellfi-telemetry.md`: Field data + Gemini — 7 diagnostic signatures, 10 decision rules
+- Agent KB assignments updated: well-performance loads all 3, reservoir/simulation load foamy-oil, production-data loads wellfi-telemetry
+- Gemini 3.1 Pro peer review: 0 corrections needed
+- Source papers: `C:\Users\kyle\OneDrive - MPS Welding Inc\White Papers\Bluesky\` and `\PCP Pump\`
+
 **Next: Phase 4 — Roundtable Orchestration**
 
 ## Directory Structure
@@ -52,11 +69,19 @@ petro-roundtable/
     economics-reserves.md ← Phase 3: COGEH, pricing, break-even, NPV
     simulation-engineer.md ← Phase 3: CMG STARS, thermal, foamy oil
     production-data.md    ← Phase 3: SCADA, analytics, dashboards
+    multiphase-flow.md   ← Phase 3.75: Wellbore flow, separator design, bubble dynamics
   operators/             ← Operator representative agents (Phase 2+)
     obsidian-energy.md   ← Phase 2: Obsidian Energy operator rep
-  knowledge/             ← Curated formation knowledge bases
-    bluesky-formation.md ← 13-section Bluesky reference (verified)
-    obsidian-energy.md   ← 13-section Obsidian Energy operator reference
+  knowledge/             ← Curated knowledge bases (verified, cited)
+    bluesky-formation.md ← 13-section Bluesky reference (Phase 1)
+    obsidian-energy.md   ← 13-section Obsidian Energy operator reference (Phase 2)
+    foamy-oil-dynamics.md ← SPE paper KB: kinetic model, CHOPS, wormholes, CSS (6+3 papers) + Section 8: wellbore-scale gas behavior
+    pcp-operations.md    ← SPE paper KB: DLS limits, ESPCP, fatigue, rod failure (5+1 papers) + multiphase gas handling
+    wellfi-telemetry.md  ← Field data KB: 7 diagnostic signatures, decision rules, hydrostatic tables
+    downhole-separation.md ← Separator design KB: WhaleShark, McCoy, MDPI (4 papers + cross-refs)
+    multiphase-flow-regimes.md ← Flow regime KB: Barnea, Taitel-Dukler, Beggs-Brill, Nagoo (7 papers)
+    bubble-dynamics-reference.md ← Clift/Grace/Weber book: Stokes, H-R, Grace correlation
+    gemini-audit-challenges.md ← 5 adversarial engineering challenges for separator design
   skills/                ← Skill definitions
     bluesky-briefing/    ← /bluesky-briefing — formation deep-dive
     ask-engineer/        ← /ask-engineer — route question to specialist
@@ -65,10 +90,20 @@ petro-roundtable/
     decline_curves.py    ← Arps decline fitting, EUR estimation
     nodal_analysis.py    ← Vogel/Darcy IPR, VLP, operating point
     sand_control.py      ← PSD analysis, screen selection, erosional velocity
+    bubble_dynamics.py   ← Stokes' law, Grace correlation, foamy viscosity correction, sand settling
+    critical_velocity.py ← Nagoo critical gas velocity, residence time vs coalescence
+    flow_regime.py       ← Flow regime prediction with heavy oil corrections
+    separator_sizing.py  ← Downhole separator sizing, WhaleShark assessment, Gemini challenge checks
   mcp/                   ← MCP server definitions (Phase 5: StackDX)
   docs/
     plans/               ← Design docs and implementation plans
 ```
+
+## Additional Skill
+
+- `wellfi-storyboard-audit` - Use before customer-facing WellFi storyboard, marketing video, roundtable visual story, or Remotion edits. It locks claims to approved evidence, separates proven vs inferred statements, and forces a final validation pass before render.
+- Skill path: `petro-roundtable/skills/wellfi-storyboard-audit/SKILL.md`
+- Default evidence pack for the current Obsidian run: `Data/Obsidian/Wells/102161808317W509/analysis/wellfi-run3-deployment-story.png`, `run3-complete-timeline.md`, `run3-narrative.md`, `design-philosophy.md`
 
 ## Data Files (External to This Directory)
 
@@ -107,7 +142,7 @@ Use `mcp__gemini-cli__ask-gemini` for peer review. Rules:
 ## Engineering Gotchas (Learned from Sessions)
 
 - **WellFi is wireless EM telemetry** — There is no cable. The sonde is clamped to the tubing and transmits wirelessly. When clamps slide, the sonde shifts position and the signal grounds out. Never say "cable short" — say "signal loss" or "sonde shifted."
-- **WellFi event log pressure is in BAR** — Always convert to kPa (×100) for engineering use. Temperature is in °C.
+- **WellFi pressure is in BAR ABSOLUTE** — The sensor reads absolute pressure. Packet messages label it as BAR. For hydrostatic calculations, subtract the air reference reading (-0.49 BAR for this deployment) to get the liquid head. Temperature is in °C.
 - **WellFi activation threshold varies per tool** — Check the deployment config for each tool. The first deployment used 50 kPa.
 - **Tubing ≠ casing depths** — Downhole tools on tubing sit INSIDE casing, not at the casing shoe. Always ask: "Is this on tubing or casing?" before placing a tool depth.
 - **Joint length is 9.456m for OBE HVS 16-18** — Do not assume 9.14m (30ft generic). Always verify from the Downhole Well Profile PDF.
@@ -115,6 +150,14 @@ Use `mcp__gemini-cli__ask-gemini` for peer review. Rules:
 - **Structural extrapolation uncertainty** — Bluesky structure varies 30+ meters across one township. Never present a formation boundary with false confidence from offsets alone.
 - **Gemini fails at data-driven generation** — Gemini discards provided data and generates from training. Use Gemini for review/challenge ONLY, never for code that must use specific numbers.
 - **Sales oil ≠ downhole oil** — Lab oil analysis labeled "Sales Oil" has been treated/heated. Viscosity will be lower than in-situ reservoir conditions.
+- **WellFi CRC errors are NOT real pressure readings** — When isCRCError=01, the P and T values are garbled EM data. Exclude from trend analysis. The event itself is significant (indicates signal disruption, possibly from gas in annulus).
+- **Hydrostatic head in deviated wells is non-linear** — At 86 deg inclination, a 9.5m joint adds only 0.66m TVD. At 69 deg, the same joint adds 3.4m TVD. Always interpolate TVD from the directional survey, never assume linear MD-to-TVD conversion.
+- **Rod-driven PCP at >50 deg inclination = short run life** — SPE literature shows rod-driven PCP practical limit is ~50 deg deviation. At 86 deg (OBE 102 HZ), the 5-month average run time aligns with published 45-118 day range. ESPCP (rodless) is the literature recommendation for >70 deg.
+- **Gemini cannot write files** — Gemini CLI MCP is read-only. Do not attempt to delegate file creation to Gemini. It will enter an infinite retry loop attempting write_file, run_shell_command, and generalist delegation — all fail. Use Gemini for review and questions only.
+- **Tubing joints x joint length ≠ tool MD** — 86 joints × 9.456m = 813.2m is the tubing PIPE length. The tool's actual MD is the tubing set depth (832.28m) because the BHA (pump + tag bar + WellFi + no-turn + collar = ~19m) sits below the last tubing joint. Always use `tubing_set_depth_mkb` from wellGeometry.ts as the reference, then calculate positions as `set_depth - (joints_from_bottom × joint_length)`. Never multiply total joints × joint length and call it a depth.
+- **OBE annulus is ALWAYS open to atmosphere** — Gas goes to flare stack, tubing to tanks. This means WellFi reads PURE liquid hydrostatic with no casing gas component. The 4-11 joint target corresponds to 0.38-2.12 BAR corrected (or -0.11 to 1.63 BAR raw display, accounting for the -0.49 BAR sensor offset). Run 3 readings of 18-21 BAR = full liquid column (~200m TVD), hundreds of joints above tag bar. The pump had only run 12 hours — would take weeks to reach the 4-11 joint operating range.
+- **WellFi reads ABSOLUTE pressure in BAR** — The sensor outputs BAR absolute. In air it displayed -0.49 BAR (sensor zero drift; true atmospheric at Peace River elevation is ~0.93 BAR abs). For hydrostatic head calculations, use the differential: P_downhole - P_air_reference = liquid head. The -0.49 air reading is the zero reference for this deployment.
+- **WellFi measurement interval changes after 48 hours** — First 48 hours: transmits every 3 minutes. After 48 hours: switches to every 6 hours (battery conservation). Plan field monitoring accordingly.
 
 ## Visualization
 
@@ -125,6 +168,8 @@ Use the `engineering-visual` skill for well schematics, deployment diagrams, and
 - Use the `remotion-data-video` skill for animated data stories (Remotion → MP4 video)
 - Remotion `npx create-video` has interactive prompts that fail in Claude Code — scaffold manually
 - For animated callouts, use temporal separation (appear/disappear per act), not spatial stacking
+
+For customer-facing WellFi storyboard and Remotion work, use `wellfi-storyboard-audit` first. It locks scenes to approved evidence, separates proven vs inferred claims, and is the required gate before animation or render changes.
 
 ## Mastery Sequence (7 Phases)
 
@@ -146,6 +191,8 @@ Each phase must be perfected before advancing. Iterate: BUILD > TEST > IDENTIFY 
 - **Calculation scripts must accept CLI args and print text** — agents read stdout, not JSON
 - **Update `CONFIG.md` phase status** when advancing phases
 - **Update this file** when adding agents, skills, or knowledge bases
+
+For WellFi marketing / Remotion work, preserve legacy story compositions. Build new run-scoped files and data modules instead of overwriting older storyboard code until the replacement is reviewed and approved.
 
 ## Branch Strategy
 

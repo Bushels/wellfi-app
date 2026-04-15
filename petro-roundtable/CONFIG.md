@@ -16,6 +16,7 @@
 
 ## Active Phase
 
+**Phase 3.75: Multiphase Flow Specialist** (complete)
 **Phase 4: Roundtable Orchestration** (next)
 
 ### Completed Phases
@@ -36,6 +37,7 @@
 | Economics & Reserves | **Active** | 3 | claude-opus-4-6 | COGEH/NI 51-101, WCS pricing, break-even, F&D, NPV |
 | Simulation Engineer | **Active** | 3 | claude-opus-4-6 | CMG STARS/IMEX, thermal modeling, foamy oil, multiphase flow |
 | Production Data | **Active** | 3 | claude-opus-4-6 | SCADA, analytics, dashboards, data quality, WellFi integration |
+| Multiphase Flow | **Active** | 3.75 | claude-opus-4-6 | Wellbore flow regimes, bubble dynamics, downhole separator design, BHA integration |
 | Lead Engineer | Planned | 4 | claude-opus-4-6 | Orchestration, routing, synthesis, arbitration, regulatory integration |
 
 ## Operator Representatives
@@ -46,6 +48,17 @@
 | CNRL | Planned | 6 | Peace River Bluesky/Clearwater — thermal CSS, Carmon Creek |
 | Baytex | Planned | 6 | Peace River Bluesky — polymer flood, Seal field |
 | Headwater | Planned | 6 | Clearwater — SAGD, primary cold flow |
+
+## Skill Inventory
+
+| Skill | Status | Purpose |
+|---|---|---|
+| `bluesky-briefing` | Active | Formation-level Bluesky deep-dive and context loading |
+| `ask-engineer` | Active | Route questions to the correct petroleum engineering specialist |
+| `ask-operator` | Active | Route questions to an operator representative |
+| `wellfi-storyboard-audit` | Active | Validate customer-facing WellFi storyboard, narrative, and Remotion claims against approved evidence before animation or rendering |
+
+**Run 3 visual-story workflow:** For Obsidian well `102161808317W509`, use `wellfi-storyboard-audit` before changing any storyboard or Remotion scene. Preserve legacy compositions and create run-scoped replacements instead of overwriting older story files.
 
 ## Gemini Integration Tiers
 
@@ -76,6 +89,24 @@ Gemini 3.1 Pro panel audit (2026-04-07): **0 critical gaps found.**
 2. Foamy oil drawdown optimization: Simulation/Reservoir → Well Performance → Production Data
 3. Caprock integrity & EOR injection: Geomechanics → Reservoir → Drilling
 
+## Knowledge Base Inventory
+
+| File | Lines | Source | Loaded By |
+|---|---|---|---|
+| `bluesky-formation.md` | ~300 | Geological source + web research (Phase 1) | All 9 agents + operator |
+| `obsidian-energy.md` | ~650 | 3 corporate PDFs + CSV analysis (Phase 2) | 7 agents + operator |
+| `foamy-oil-dynamics.md` | ~210 | 6 SPE papers (175390, 174431, 174446, 170879, 150633, 118244) | well-performance, reservoir-engineer, simulation-engineer |
+| `pcp-operations.md` | ~250 | 5 SPE papers (136816, 93594, 171352, 192464, Energies-15-04259) | well-performance |
+| `wellfi-telemetry.md` | ~220 | OBE Run 3 field data + Gemini diagnostic analysis | well-performance, production-data |
+| `downhole-separation.md` | ~1090 | 4 papers (WhaleShark, McCoy, MDPI, SPE-171890) + cross-reference synthesis | multiphase-flow |
+| `multiphase-flow-regimes.md` | ~1317 | 7 papers (Barnea, Taitel-Dukler, Beggs-Brill, Nagoo x2, Gokcal, Springer) | multiphase-flow |
+| `bubble-dynamics-reference.md` | ~358 | Clift, Grace & Weber (1978) book extract | multiphase-flow |
+| `gemini-audit-challenges.md` | ~100 | 5 adversarial engineering challenges from Gemini 3.1 Pro | multiphase-flow |
+
+Added 2026-04-08: Three KBs distilled from 11 SPE papers on foamy oil dynamics, PCP pump placement/fatigue, and WellFi telemetry interpretation. Gemini 3.1 Pro peer review: 0 corrections needed.
+
+Added 2026-04-15: Four KBs + 1 reference for Multiphase Flow Specialist (Phase 3.75). Distilled from 22 papers + 1 book via 9 parallel Sonnet subagents. Enhanced foamy-oil-dynamics.md (Section 8: wellbore-scale gas behavior) and pcp-operations.md (multiphase gas handling). Gemini 3.1 Pro adversarial audit: 5 challenges identified and documented.
+
 ## Calculation Script Inventory
 
 | Script | Status | Agents Using |
@@ -83,6 +114,10 @@ Gemini 3.1 Pro panel audit (2026-04-07): **0 critical gaps found.**
 | `decline_curves.py` | **Built** | Reservoir, Economics, Production Data, Simulation |
 | `nodal_analysis.py` | **Built** | Reservoir, Well Performance, Simulation |
 | `sand_control.py` | **Built** | Well Performance, Drilling, Geomechanics, Facilities |
+| `bubble_dynamics.py` | **Built** | Multiphase Flow |
+| `critical_velocity.py` | **Built** | Multiphase Flow |
+| `flow_regime.py` | **Built** | Multiphase Flow |
+| `separator_sizing.py` | **Built** | Multiphase Flow |
 | `esp_design.py` | **Missing** (in design doc) | Well Performance |
 | `wellbore_hydraulics.py` | **Missing** (in design doc) | Drilling |
 
