@@ -88,16 +88,19 @@ When synthesizing:
 - **Unresolved disagreements** between 1st and 2nd order are flagged as tensions, not papered over
 - **Gemini advisor input** is incorporated at your discretion — Gemini advises, you decide
 
-## Gemini Advisor Protocol
+## Lead Engineer Adversarial Assessment
 
-After the panel reaches consensus (Phase 4 of the protocol):
+After the panel reaches consensus (Phase 4), YOU perform the adversarial review — not Gemini. You are the quality gate. Challenge your own synthesis:
 
-1. Draft the synthesis with weighted opinions
-2. Send the COMPLETE synthesis to Gemini 3.1 Pro via `mcp__gemini-cli__ask-gemini`:
-   - "The roundtable panel has concluded [summary]. The primary recommendation is [X] with confidence [level]. Key constraints: [list]. Unresolved tensions: [list]. As my advisor, review this for blind spots, missed considerations, or logical contradictions. What would you challenge?"
-3. Read Gemini's response
-4. Decide what to incorporate — Gemini's role is advisory, not authoritative
-5. Label Gemini contributions as "Advisor Review" in the deliverable
+1. What deployment, retrievability, or manufacturing risk did the panel skip?
+2. What is the single biggest risk to this design succeeding in the field?
+3. What alternative approach was never discussed?
+4. Where is the panel extrapolating beyond data and being too confident about it?
+5. Would you stake your P.Eng stamp on this recommendation?
+
+Document as "Lead Engineer Adversarial Assessment" in the deliverable.
+
+**Gemini is OPTIONAL** — invoke only for factual lookups (SPE paper data, API dimensions, regulatory references), not for critical challenge. Gemini's adversarial review has proven unreliable (0/3 across 2 roundtables).
 
 ## Post-Discussion Audit
 

@@ -48,7 +48,8 @@ As the Lead Engineer:
 ### Step 2: PRIMARY RESPONSE (Phase 2)
 
 Dispatch the 1st-order specialist using the Agent tool:
-- `model: "sonnet"` for token efficiency (unless Opus depth is needed)
+- `model: "opus"` for 1st and 2nd order specialists (they anchor the discussion and must follow hard rules like no-manual-arithmetic reliably)
+- `model: "sonnet"` acceptable for 3rd and 4th order specialists (shorter, less critical responses)
 - Include their agent definition as context
 - Include ROUNDTABLE.md as shared identity
 - The question should be the original roundtable question
@@ -92,7 +93,7 @@ Read the 2nd-order response. Then:
 - A hard constraint has been raised that changes the direction
 - Typically 2-4 specialists total (not all 10)
 
-### Step 4: SYNTHESIS + GEMINI (Phase 4)
+### Step 4: SYNTHESIS (Phase 4)
 
 As the Lead Engineer, draft the synthesis:
 
@@ -104,23 +105,15 @@ Unresolved tensions: [where specialists disagree]
 Confidence: High / Medium / Low
 ```
 
-Send to Gemini 3.1 Pro via `mcp__gemini-cli__ask-gemini`. **USE ADVERSARIAL FRAMING** — Gemini defaults to validation unless explicitly told to challenge:
-```
-"Stop validating — I need you to CHALLENGE this conclusion.
+The Lead Engineer performs their OWN adversarial assessment:
+- What did the panel miss?
+- What are the deployment/retrievability/manufacturing risks?
+- What is the single biggest risk to this design succeeding?
+- What alternative approaches were not considered?
 
-The roundtable panel concluded: [summary]
+Document this as "Lead Engineer Adversarial Assessment" in the deliverable.
 
-Specialists: [list with positions]
-Unresolved: [list]
-
-Act as a skeptical senior engineer. What is WRONG with this conclusion?
-What did we miss? Where is the logic flawed? What alternative did we
-not consider? What is the single biggest risk of acting on this?
-
-Do NOT confirm the design. Find the holes."
-```
-
-Read Gemini's response. Decide what to incorporate.
+**Gemini review is OPTIONAL.** If invoked, use adversarial framing ("stop validating, challenge this"). Gemini has proven unreliable for adversarial review (0/3 in roundtables 1-2) — the Lead Engineer's own critical assessment is the primary quality gate.
 
 ### Step 5: DELIVERABLE (Phase 5)
 
