@@ -20,7 +20,27 @@ out/
 *.swo
 
 # Project specific
-.claude/
+
+# Track .claude/agents/ and .claude/skills/ at any depth (Claude Code auto-discovery).
+# Keep local-machine settings, launch files, and start scripts ignored.
+**/.claude/*
+!**/.claude/agents/
+!**/.claude/agents/**
+!**/.claude/skills/
+!**/.claude/skills/**
+!**/.claude/memory/
+!**/.claude/memory/**
+**/.claude/settings.local.json
+**/.claude/launch.json
+**/.claude/start-vite.*
+
+# Track .codex/config.toml for portable model/reasoning settings;
+# keep auth, sessions, and local-only files out.
+**/.codex/*
+!**/.codex/config.toml
+**/.codex/*.local.json
+**/.codex/sessions/
+
 wellfi-app/node_modules/
 wellfi-app/dist/
 wellfi-app/.env
@@ -30,7 +50,6 @@ nul
 .playwright-cli/
 .playwright-mcp/
 Data/.~lock.*
-wellfi-app/.codex/
 wellfi-app/.playwright-cli/
 wellfi-app/output/
 wellfi-app/supabase/.temp/

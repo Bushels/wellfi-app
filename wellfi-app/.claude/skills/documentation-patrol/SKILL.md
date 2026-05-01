@@ -14,7 +14,7 @@ Systematic staleness detection across all WellFi documentation. Run after any ma
 - After renaming constants, color values, status strings, or commands
 - Before creating a PR or merging to main
 - As Gate 4 (Document) in the 6-gate workflow
-- Hand off to `skills/docs-maintainer/SKILL.md` when docs need to be updated, not just audited
+- Hand off to `.claude/skills/docs-maintainer/SKILL.md` when docs need to be updated, not just audited
 
 ## Patrol Checklist
 

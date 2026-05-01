@@ -16,7 +16,7 @@ Produce a comprehensive Bluesky Formation briefing by reading the knowledge base
 
 2. **Read the geoscientist agent context** for additional interpretation guidance:
    ```
-   Read petro-roundtable/agents/geoscientist.md
+   Read .claude/agents/geoscientist.md
    ```
 
 3. **Deliver the briefing** covering the knowledge base (13 headers: Quick Reference + Sections 1-10 + Subsections 4b, 4c):

@@ -1,0 +1,9 @@
+# Repo-level Codex defaults for the WellFi app.
+# Keep these conservative and override per session only when the task needs it.
+
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+personality = "pragmatic"
+
+[windows]
+sandbox = "elevated"

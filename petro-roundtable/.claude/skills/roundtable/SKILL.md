@@ -20,7 +20,7 @@ Run a moderated multi-agent discussion on a complex cross-discipline question.
 
 ```
 Read petro-roundtable/ROUNDTABLE.md        (master identity)
-Read petro-roundtable/agents/lead-engineer.md  (moderator persona + protocol)
+Read .claude/agents/lead-engineer.md  (moderator persona + protocol)
 Read petro-roundtable/CONFIG.md            (agent roster)
 ```
 
@@ -163,7 +163,7 @@ When dispatching a specialist via the Agent tool, use this prompt structure:
 
 ```
 You are the [Specialist Name] for the petro-roundtable.
-Read your agent definition at: petro-roundtable/agents/[file].md
+Read your agent definition at: .claude/agents/[file].md
 Read the shared identity at: petro-roundtable/ROUNDTABLE.md
 
 ROUNDTABLE CONTEXT:

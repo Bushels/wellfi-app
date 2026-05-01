@@ -1,6 +1,6 @@
 # WellFi Current State
 
-**Updated:** 2026-03-23
+**Updated:** 2026-03-27
 
 ## What Is Complete
 
@@ -17,6 +17,11 @@
   - oil or gas toggle
   - WellFi cohort filter
   - scoped behavior that follows the selected operator
+- Obsidian-configured wells now have a survey-driven trajectory plate workflow that:
+  - separates surveyed stations from projected TD rows
+  - uses equal-scale section and plan views
+  - places completion anchors with minimum-curvature interpolation
+  - can export a standalone SVG plate from a survey CSV
 - Monthly data workflows now exist as:
   - `npm run production:sync -- "<csv-path>"` for the standard monthly sync
   - `npm run production:refresh -- "<csv-path>"` for overlay-only rebuilds
@@ -117,6 +122,5 @@ See:
 
 - `AGENTS.md`
 - `CLAUDE.md`
-- `GEMINI.md`
 - `docs/agent-workflows.md`
 - `docs/monthly-production-refresh.md`

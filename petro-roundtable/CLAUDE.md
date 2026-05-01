@@ -59,7 +59,7 @@ petro-roundtable/
   CLAUDE.md              ← You are here
   ROUNDTABLE.md          ← Master identity (all agents load this)
   CONFIG.md              ← Model config, agent roster, phase status
-  agents/                ← Agent definitions (.md files)
+  .claude/agents/        ← Agent definitions (.md files, auto-loaded by Claude Code)
     geoscientist.md      ← Phase 1: Bluesky Formation specialist
     reservoir-engineer.md ← Phase 3: Recovery, decline, waterflood, EOR
     drilling-engineer.md  ← Phase 3: Well design, directional, casing
@@ -71,6 +71,7 @@ petro-roundtable/
     production-data.md    ← Phase 3: SCADA, analytics, dashboards
     multiphase-flow.md   ← Phase 3.75: Wellbore flow, separator design, bubble dynamics
     lead-engineer.md     ← Phase 4: Roundtable moderator, relevance-weighted cascade
+  agents/console/        ← Console-mode prompts (sub-agent prompt resources)
   operators/             ← Operator representative agents (Phase 2+)
     obsidian-energy.md   ← Phase 2: Obsidian Energy operator rep
   knowledge/             ← Curated knowledge bases (verified, cited)
@@ -83,11 +84,13 @@ petro-roundtable/
     multiphase-flow-regimes.md ← Flow regime KB: Barnea, Taitel-Dukler, Beggs-Brill, Nagoo (7 papers)
     bubble-dynamics-reference.md ← Clift/Grace/Weber book: Stokes, H-R, Grace correlation
     gemini-audit-challenges.md ← 5 adversarial engineering challenges for separator design
-  skills/                ← Skill definitions
+  .claude/skills/        ← Skill definitions (auto-loaded by Claude Code)
     bluesky-briefing/    ← /bluesky-briefing — formation deep-dive
     ask-engineer/        ← /ask-engineer — route question to specialist
     ask-operator/        ← /ask-operator — route question to operator rep
     roundtable/          ← /roundtable — multi-agent moderated discussion
+    wellfi-storyboard-audit/ ← gate before customer-facing storyboard/Remotion work
+    remotion-data-video/ ← Remotion video scaffolding
   calculations/          ← Python CLI scripts (run via Bash)
     decline_curves.py    ← Arps decline fitting, EUR estimation
     nodal_analysis.py    ← Vogel/Darcy IPR, VLP, operating point
@@ -104,7 +107,7 @@ petro-roundtable/
 ## Additional Skill
 
 - `wellfi-storyboard-audit` - Use before customer-facing WellFi storyboard, marketing video, roundtable visual story, or Remotion edits. It locks claims to approved evidence, separates proven vs inferred statements, and forces a final validation pass before render.
-- Skill path: `petro-roundtable/skills/wellfi-storyboard-audit/SKILL.md`
+- Skill path: `petro-roundtable/.claude/skills/wellfi-storyboard-audit/SKILL.md`
 - Default evidence pack for the current Obsidian run: `Data/Obsidian/Wells/102161808317W509/analysis/wellfi-run3-deployment-story.png`, `run3-complete-timeline.md`, `run3-narrative.md`, `design-philosophy.md`
 
 ## Data Files (External to This Directory)
@@ -209,7 +212,7 @@ This repo contains two completely unrelated agent systems:
 | | Petro-Roundtable Agents (THIS PROJECT) | WellFi Development Agents |
 |---|---|---|
 | **Purpose** | Domain experts that ARE the product | Development agents that help BUILD the wellfi-app |
-| **Location** | `petro-roundtable/agents/` | `wellfi-app/agents/session-{N}/` |
+| **Location** | `petro-roundtable/.claude/agents/` | `wellfi-app/agents/session-{N}/` |
 | **Examples** | Geoscientist, reservoir engineer | UI agent, data-integrity agent |
 | **Invoked by** | Users via `/ask-engineer`, `/roundtable` | Claude Code during dev sessions |
 | **Identity** | `ROUNDTABLE.md` | `wellfi-app/agents/COORDINATOR.md` |
