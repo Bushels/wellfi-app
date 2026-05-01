@@ -1,0 +1,4 @@
+interface:
+  display_name: "Well Trajectory Visualization"
+  short_description: "Directional survey workflow for accurate deviated well plates and anchor placement."
+  default_prompt: "Build or validate an accurate deviated well view from a survey CSV, keep surveyed versus projected stations separate, use minimum-curvature interpolation for anchors, and produce a clean section/plan plate with QA notes."

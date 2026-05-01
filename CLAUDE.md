@@ -17,19 +17,21 @@ Current implementation state:
 1. `AGENTS.md`
 2. `docs/current-state.md`
 3. `docs/agent-workflows.md`
-4. the relevant workflow `skills/*/SKILL.md`
+4. the relevant workflow `.claude/skills/*/SKILL.md`
 
 ## Workflow Discovery
 
-For documentation or workflow-oriented tasks, use these runbooks:
+Skills now live under `.claude/skills/` (auto-discovered by Claude Code's Skill tool when launched from this project).
 
-- `skills/docs-maintainer/SKILL.md`
-- `skills/documentation-patrol/SKILL.md`
-- `skills/monthly-production-refresh/SKILL.md`
-- `skills/operator-onboarding/SKILL.md`
-- `skills/operator-smoke-test/SKILL.md`
-- `skills/well-trajectory-visualization/SKILL.md`
-- `skills/wellfi-supabase-rollout/SKILL.md`
+Runbooks for documentation or workflow-oriented tasks:
+
+- `.claude/skills/docs-maintainer/SKILL.md`
+- `.claude/skills/documentation-patrol/SKILL.md`
+- `.claude/skills/monthly-production-refresh/SKILL.md`
+- `.claude/skills/operator-onboarding/SKILL.md`
+- `.claude/skills/operator-smoke-test/SKILL.md`
+- `.claude/skills/well-trajectory-visualization/SKILL.md`
+- `.claude/skills/wellfi-supabase-rollout/SKILL.md`
 
 ## Related Projects
 
