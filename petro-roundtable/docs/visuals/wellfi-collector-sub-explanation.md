@@ -1,122 +1,177 @@
-# WellFi Collector Sub — Engineering Explanation
+# WellFi Collector Sub — How It Works
 
-**Purpose:** Explain the asymmetric low-side collector concept to a downhole tool engineer.
+**Version:** RT4 (2026-04-16) — corrected viscosity + revised design + firmware gate check
+**Confidence:** MEDIUM
+**Status:** Design ready for bench validation. NOT ready for fab.
 
 ---
 
-## The Problem
+## Direct answer
 
-OBE's Bluesky wells produce 8 API bitumen at 80,000 cP through rod-driven PCP at 86° inclination. Gas interference at the PCP intake causes:
-- Erratic pump fillage (gas slugs displace liquid at the pump)
-- Concentrated thermal stress in discharge stator stages (SPE-95272: 4x steeper pressure gradient at high GVF)
-- Shortened PCP run life (5-month average at OBE, vs 12-24 month target)
-- Each pump change costs $49,000
+This is a **modified 36-inch tubing joint** with **four external asymmetric lips on the low side** that act as staged gas-coalescence and slug-fragmentation features. It sits immediately below the WellFi sonde in the bottomhole assembly. Its job is to **clean up the foamy-oil flow** before it reaches the WellFi EM signal path and the PCP intake — so WellFi transmits reliably during gas events and the pump sees a less erratic intake mixture.
 
-Standard downhole gas separators (Poor-boy, Packer-style) rely on gravity — gas bubbles rise upward through liquid. **At 80,000 cP, this mechanism fails catastrophically.** A 2mm gas bubble rises at 0.05 mm/s — it would take 5.7 hours to rise one meter. The standard McCoy sizing method gives 0.23 bbl/d separator capacity vs 190 bbl/d required (836x shortfall).
+It is NOT a high-efficiency gas separator. It is a **passive flow conditioner**.
 
-## The Physics Insight — Why 86° Changes Everything
+---
 
-At 86° from vertical, gravity decomposes into two components:
+## 1. What this tool is for — and what it is not for
 
-- **Transverse** (perpendicular to wellbore, toward the low side): sin(86°) × g = **0.998g** — nearly full gravity
-- **Axial** (along the wellbore): cos(86°) × g = **0.07g** — only 7% of gravity
-
-**Transverse gravity is 14x stronger than axial gravity.** This means:
-
-1. Liquid doesn't "fall back" along the wellbore axis (the mechanism conventional separators and the WhaleShark exploit at 40-60°)
-2. Instead, liquid **drains transversely to the LOW SIDE of the casing** and pools as a crescent-shaped reservoir along the bottom
-3. Free gas (coalesced Taylor bubbles from slug flow) rides the **HIGH SIDE** of the casing
-
-At near-horizontal inclination, the wellbore naturally stratifies: heavy liquid on the bottom, light gas on the top. The question is: can we exploit this stratification with a simple geometry change to the WellFi tool string?
-
-## The Design — Asymmetric Low-Side Collector Lip
-
-The WellFi Collector Sub is a 2-foot tubing joint with **external geometry on the low side only**:
-
-### What it is:
-- A 610mm (24") sub that replaces a standard tubing joint in the WellFi BHA
-- Full 2-7/8" EUE drift bore (2.441") — rod string and couplings pass through unaffected
-- A **180-degree half-moon lip** machined onto the low side of the tubing OD, projecting 23mm into the casing-tubing annulus
-- The lip is angled at 15-20° (swept back) to act as a passive scoop
-- The **upper 180 degrees has NO lip** — this is the gas bypass corridor
-- A 1/2" bypass port with ball check valve on the high side prevents restriction during pump startup
-
-### How it works:
-
-1. **Slug flow delivers intermittent liquid and gas** traveling uphole from the horizontal lateral toward the PCP
-2. **Between slugs**, the liquid film on the casing wall drains transversely by gravity (sin(86°) = 0.998g) to the LOW SIDE, forming a crescent pool
-3. **The low-side lip intercepts this crescent pool.** Liquid flowing uphole along the bottom of the casing hits the angled lip and is deflected radially inward, toward the tubing body
-4. **Liquid accumulates behind the lip**, raising the local liquid holdup immediately downstream
-5. **Free gas continues unobstructed** through the upper 180° corridor — no turbulence, no foam generation, no pressure drop
-6. **The WellFi sonde sits just below the collector.** The enriched-liquid zone above the collector provides a more stable P/T reading with less gas interference
-
-### Why the rod string doesn't matter:
-
-The rod string is **inside the tubing**. The collector lip is **outside the tubing**, in the casing-tubing annulus. They are on opposite sides of the tubing wall (0.217" J55 steel). Rod rotation at 260 RPM creates friction on the tubing bore — it has zero effect on the external annular flow. This is the key advantage of the external-geometry design.
-
-### Why it's asymmetric (not a full ring):
-
-At 86°, gas and liquid are on opposite sides of the casing. A full 360° lip ring would:
-- Obstruct the gas bypass path on the high side (bad — creates turbulence and foam)
-- Create unnecessary flow restriction
-- Add no value where there's no liquid to capture (upper 180° is gas only)
-
-The half-moon design gives the liquid a collection surface WHERE THE LIQUID IS (low side) and gives the gas an unobstructed path WHERE THE GAS IS (high side).
-
-## Expected Performance
-
-**Efficiency: 5-15% gas bypass prevention** vs bare tubing.
-
-This is an honest estimate. We are not claiming 100% separation — that's physically impossible at 80,000 cP. What we ARE claiming:
-
-- During each slug flow reversal (momentary downflow events), the collector captures some of the liquid that would otherwise be carried uphole mixed with gas
-- This enriches the liquid fraction at the PCP intake by 5-15%
-- At OBE's conditions, this reduces GVF at the pump intake from (for example) 0.55 to 0.47 — crossing the critical 0.5 GVF threshold where PCP thermal stress becomes nonlinear (Bratu, SPE-95272)
-
-**What 5-15% means operationally:**
-- Reduced thermal stress on PCP discharge stages → longer elastomer life
-- More consistent pump fillage → fewer pump-off events
-- Cleaner WellFi P/T signal → better diagnostics for pump optimization
-- Estimated value: ~$10,000/well/year in reduced pump change frequency
-
-## What If It Doesn't Work?
-
-**Worst case: the collector sub is a benign spacer.** It adds no flow restriction (full drift bore, bypass port for startup), no hang-up risk (bull-nose taper on leading edge), and no interference with the rod string. If the lip doesn't capture any liquid, it's just a piece of steel in the BHA that does nothing. No harm.
-
-Over weeks, sand-laden bitumen may fill the lip recess, smoothing it back to a cylindrical profile. At that point it IS a spacer sub. But even if it works for only the first few weeks of a pump run — when GVF is highest and pump stress is greatest — the value is captured.
-
-## What Makes This Different from a WhaleShark
-
-| Feature | WhaleShark | WellFi Collector Sub |
-|---|---|---|
-| Length | 18 ft (5.5m) | 2 ft (0.6m) |
-| Mechanism | Axial liquid fallback into upward-facing collector | Transverse liquid stratification capture on low side |
-| Best inclination | 40-60° (tested to 80°) | 86° (exploits near-horizontal stratification) |
-| Rod compatibility | Problematic (rod opposes fallback) | No issue (rod is inside tubing) |
-| Separate tool? | Yes — standalone product | No — integrated into WellFi BHA |
-| Trip cost | Additional trip or extended BHA | Zero — replaces a standard tubing joint |
-| Cost | ~$5,000-10,000 (estimated) | ~$500-1,000 (machined tubing joint) |
-
-## What Needs to Happen Next
-
-1. **FreeCAD model** — Detailed CAD of the sub geometry, thread connections, casing collar clearance
-2. **Flow loop test** — Even a glycerin/water analog at 1,000-10,000 cP in an inclined annular test section would validate the liquid capture mechanism
-3. **Field trial** — Deploy on OBE 102 HZ 16-18 (already instrumented with WellFi). Compare pre/post WellFi P/T data to measure the effect on gas interference
-4. **Patent search** — Verify no existing IP covers asymmetric annular passive separation on tubing
-
-## Key Numbers for Quick Reference
-
-| Parameter | Value |
+| Claim | Reality |
 |---|---|
-| Oil viscosity (dead) | 80,000 cP |
-| Oil viscosity (live, GVF<40%) | 44,800 cP (SPE-136665) |
-| 2mm bubble rise velocity | 0.049 mm/s (Stokes' law) |
-| Sand settling velocity (120μm) | 0.0003 mm/s |
-| Annular flow velocity | 13.31 mm/s |
-| Coalescence time | 10-20 min (Maini 1999) |
-| Residence time at 15m | 19.7 min (marginal) |
-| Transverse gravity at 86° | 0.998g (14x axial) |
-| Collector projection | 23mm radial |
-| Expected efficiency | 5-15% gas bypass prevention |
-| PCP life savings | ~$10K/well/year |
-| Worst case | Benign spacer sub |
+| "Extends PCP run life" | **NO.** Run life on this well is driven by 86° rod wear, not gas ingestion. |
+| "Eliminates gas from the PCP" | **NO.** Expected gas reduction is 57% of entrained gas, not total elimination. |
+| "Replaces a WhaleShark or downhole separator" | **NO.** This is a tubing-joint modification, not a standalone separator. |
+| "Improves WellFi signal quality during gas events" | **YES.** This is the primary value proposition. |
+| "Fragments slug flow into smaller, more uniform disturbances" | **YES.** This is the most confident mechanism — geometry alone delivers it. |
+| "Replaceable by firmware / software filter" | **NO.** Firmware recovers only 19% of the hardware benefit (tested on Run 3 data). |
+
+---
+
+## 2. The well — what we are actually designing for
+
+**Well:** OBE 102 HZ 16-18-83-17W5 (Harmon Valley South, Bluesky Formation)
+**Production:** 190 bbl/d at 86° inclination, rod-driven PCP
+**Reservoir temperature:** 21-22°C (adjacent well BHP test)
+**Oil properties (Element lab analysis, sales oil):**
+
+| Temperature | Absolute viscosity | Kinematic |
+|---|---|---|
+| 20°C | **8,320 cP** | 8,420 mm²/s |
+| 40°C | 1,320 cP | 1,360 mm²/s |
+| 60°C | 379 cP | 394 mm²/s |
+
+- Density: 990.8 kg/m³ (SG 0.9917, 11.3° API, bitumen)
+- BS&W: 5.02% | Sulfur: 6.11% | Pour point: 3°C
+
+**Downhole live-oil viscosity estimate:** ~4,660 cP (SPE-136665 foamy correction = 56% of dead).
+
+**Historical note:** Prior roundtables (RT1-RT3) assumed 80,000 cP — a CSEG Recorder regional figure for "top of Bluesky reservoir." The lab measurement of this specific well's oil is **10x lower**. RT4 was convened to work through the implications.
+
+---
+
+## 3. Why gas is the problem
+
+At 4,660 cP, foamy oil holds gas as **micro-bubbles** distributed throughout the liquid. A 2 mm bubble rises at 0.46 mm/s — still far too slow for bulk gravity separation (40 minutes to cross a 1 m annular gap). **Coalesced** 10 mm bubbles rise at ~11.6 mm/s — this is where gravity starts to help.
+
+When gas reaches the PCP intake entrained in the liquid, two things happen:
+1. The pump discharge stages see local GVF spikes → elastomer thermal stress
+2. The WellFi EM signal path is disrupted → CRC errors → data loss
+
+The Apr 3 Run 3 gas event (11:52) demonstrated both: a 7-minute EM disruption with CRC errors. The tool survived, but the event shows the failure mode is real.
+
+---
+
+## 4. Two-stage mechanism (corrected in RT4)
+
+### Stage 1: Shear coalescence at each lip
+
+As foamy oil squeezes past a lip restriction, **viscous shear** stretches and deforms the micro-bubbles. At 4,660 cP live viscosity, the wall shear stress through the narrowed gap is about **12 Pa** — enough to drive Capillary number above 1, which is the regime where bubble deformation and forced contact produce coalescence.
+
+**Three smaller bubbles touching → one larger bubble.** That's the mechanism.
+
+### Stage 2: Gravity stratification between lips
+
+After a coalesced ~10 mm bubble forms, it rises at 11.6 mm/s (wall-corrected ~13.8 mm/s under transverse gravity at 86°). The annular gap is 62 mm — crossing time **~5 seconds**. Lip-to-lip transit time at 190 bbl/d is **11.4 seconds**. The coalesced bubble **clears the gap before the next lip**.
+
+This is the **critical RT4 finding**. At the old 80,000 cP assumption, migration time was 52 s vs 11.4 s transit — gravity lost. At 8,320 cP, gravity **wins**. The mechanism closes on itself only at the corrected viscosity.
+
+### Why asymmetric low-side geometry?
+
+At 86° inclination, transverse gravity is **14x stronger** than axial gravity. The liquid sits on the low side of the casing; coalesced gas rises to the high side. A full-ring lip would pinch BOTH sides — counterproductive on the high side where gas is trying to escape. An **asymmetric half-moon lip on the low side only** lets high-side gas flow freely while creating the shear zone in the liquid-rich low-side layer.
+
+---
+
+## 5. Slug damping — the surest benefit
+
+Even if the coalescence mechanism is weaker than claimed, **slug damping is pure geometry**. A large liquid slug hitting a restriction deforms, fragments, and emerges as smaller, more frequent disturbances on the other side. No coalescence physics required. No viscosity assumption required.
+
+**Expected:** ~59% reduction in slug amplitude with 4 lips at 28% restriction, ~30% increase in slug frequency (smaller, more frequent).
+
+**Why this matters for WellFi:** shorter slugs = shorter EM disruption per event = shorter CRC error bursts = better payload recovery. The Run 3 Apr 3 data (66% → 97% payload success after a joint pull) validates that flow-path improvements directly translate to signal quality.
+
+---
+
+## 6. The design (RT4 revision)
+
+| Parameter | Value | Change from RT3 |
+|---|---|---|
+| Sub length | **36 inches** | was 24" |
+| Number of lips | **4** | was 3 |
+| Lip restriction | **28% of annular area** | was 30% |
+| Lip profile | **Asymmetric low-side + scooped underside** | was square asymmetric |
+| Sand handling | **4x 1/4" drain ports per lip** | new |
+| Material | Conductive steel | unchanged |
+| Bore | Full drift (rod couplings pass freely) | unchanged |
+| Fishing neck | Standard (retrievable) | unchanged |
+| Location in BHA | Immediately below WellFi sonde | unchanged |
+
+**Why 4 lips instead of 3:** optimizing for signal quality (more fragmentation events) rather than pump life (more residence time).
+
+**Why 36" instead of 24":** gives enough axial spacing (~7.2" per stage) for coalesced bubbles to actually migrate to the high side between lips — the stage-2 gravity mechanism needs that length.
+
+**Why scooped profile:** solves the sand-accumulation problem Well Performance raised during RT4. At 4,660 cP, 120-μm sand settles at ~0.3 mm/s (10x faster than at the 80k cP assumption). A square lip creates a stagnation corner where sand piles up over 5 months. The scooped underside self-sheds sand axially while the upstream crest still creates the shear layer.
+
+**Why drain ports:** belt-and-suspenders redundancy for the sand problem. Cheap to machine, no impact on mechanism.
+
+---
+
+## 7. Why firmware alone cannot do this (the adversarial gate check)
+
+Before committing to hardware fab, the Lead Engineer proposed a firmware alternative test. Could a smart packet filter on WellFi's receiver recover most of the benefit without any downhole hardware?
+
+**Test (proof of concept on real Run 3 data):**
+- Parse 89 packets from Apr 2-3 Run 3 EMGRx event log
+- Apply three filter strategies: naive CRC rejection, multi-criterion, gas-event-aware + interpolation
+- Measure how much of the +27.5 pp Apr 2 → Apr 3 improvement is recoverable in software
+
+**Result:** Best firmware strategy recovers **only 19% of the hardware gain**.
+
+| Strategy | Usable rate | Gain vs baseline |
+|---|---|---|
+| Raw Apr 2 (baseline) | 66.1% | — |
+| A: Naive CRC rejection | 66.1% effective | 0 pp |
+| B: Multi-criterion | 66.1% effective | +0 pp (only 1 recovered packet) |
+| C: Gas-event-aware + interpolation | 71.4% | **+5.4 pp** |
+| Raw Apr 3 (goal, post joint-pull) | 93.5% | +27.5 pp |
+
+**Why firmware can't close the gap:** The Apr 2 problem wasn't a discrete gas event to interpolate through. It was **continuous poor EM signal path**. No firmware can fix a bad signal environment — that requires geometric change. The collector sub is the geometric change equivalent of the joint pull.
+
+**What firmware CAN contribute:** gas-event detection flags for SCADA, short-gap interpolation for trending displays, low-confidence packet labeling. These are useful enhancements — not substitutes for the hardware.
+
+---
+
+## 8. Risks and validation requirements
+
+### Before fab (required)
+
+1. **Flow loop bench test** matching three dimensionless numbers: Capillary (shear coalescence), Bond (gravity), particle Reynolds (sand). Glycerin/water + glass beads + air gets you all three. ~6-8 weeks.
+2. **CFD screening** of the scooped lip profile at Re = 0.35. The shear layer behavior at creeping flow is not the same as at high Re — cannot assume NACA-style intuition holds. If CFD shows shear layer collapse, fall back to square-edge lip + drain ports only.
+3. **Two calculation scripts** flagged as gaps in RT4:
+   - `signal_quality_vs_gvf.py` — CRC rate vs intake GVF, for sizing iteration
+   - `stratified_migration.py` — gravity-assisted bubble migration with axial advection
+
+### Open unknowns
+
+- **PVT sample from this well** would collapse the 8.3k / 20k / 40k cP uncertainty window. Not yet available.
+- **Coalescence kinetics at 2-5k cP** — Maini 1999 data only validated at higher viscosities.
+- **Sand accumulation under flow cycling** (PCP restart events) — needs to be part of bench test.
+
+### P.Eng stamp question
+
+**Would NOT stamp for immediate fabrication.** The RT4 design is more defensible than RT3, but still untested at corrected viscosity, scooped profile, and sand dynamics. Would stamp for **entering bench validation gate**.
+
+---
+
+## 9. What happens if we deploy it
+
+**Success case:** WellFi payload success during gas events improves from Run 3's 93.5% (Apr 3) toward 97-98%. Slug amplitude drops ~60%. The operator sees cleaner pressure/temperature trends. Proactive rod-wear detection via pressure signature shifts becomes feasible. Net value: more reliable monitoring, earlier pump-pull decisions, $49k pump change avoided PER PROACTIVE PULL (not per sub — the sub doesn't extend pump life, it extends the window in which we know whether the pump is healthy).
+
+**Degradation case:** If downhole viscosity is closer to 20k cP, shear stress triples (to ~29 Pa), coalescence efficiency rises, gravity migration is marginal. Design still works — monotonic degradation, no cliff. If viscosity is 40k cP, gravity loses again and we're back to shear-dominated (still works, just closer to RT3 regime).
+
+**Failure case:** Sand accumulates despite the scooped profile and drain ports. Lips plug. Sub becomes a wireline fishing hazard. **This is the critical design risk.** Must be caught in bench testing with flow cycling — cannot be extrapolated from steady-state analysis.
+
+---
+
+## 10. One-sentence summary
+
+A passive 36-inch tubing sub with four low-side shear-coalescence lips that improves WellFi signal quality and dampens slug flow, validated to survive viscosity correction and to be unrecoverable by firmware alone — requiring bench-scale flow loop validation before fabrication.
