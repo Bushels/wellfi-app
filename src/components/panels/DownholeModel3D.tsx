@@ -211,7 +211,7 @@ function resolveDownholePlacement(well: Well, geometryAsset: WellGeometryAsset |
 
   const notes = well.wellfi_device?.notes;
 
-  const geometryTotalDepthM = geometryAsset?.survey_points.at(-1)?.md_m ?? null;
+  const geometryTotalDepthM = geometryAsset?.last_survey_md_m ?? null;
   const geometryPumpDepthM = geometryPump ? componentCenterM(geometryPump) : null;
   const geometrySlottedTagBarDepthM = geometrySlottedTagBar ? componentCenterM(geometrySlottedTagBar) : null;
   const geometryWellFiDepthM = geometryWellFi ? componentCenterM(geometryWellFi) : null;
@@ -513,7 +513,7 @@ function depthSourceDescription(placement: DownholePlacement): string {
     case 'manual':
       return 'Depths sourced from WellFi install notes.';
     case 'geometry':
-      return `Trajectory and tool positions sourced from survey geometry: ${placement.sourceFile ?? 'well geometry asset'}.`;
+      return `Trajectory and tool positions sourced from surveyed geometry: ${placement.sourceFile ?? 'well geometry asset'}. Projected TD rows, when present, are treated separately from surveyed stations.`;
     case 'schematic':
       return `Depths sourced from schematic: ${placement.sourceFile ?? 'Well profile PDF'}.`;
     case 'database':
@@ -1522,7 +1522,7 @@ function DownholeModel3DComponent({ well, canEdit = false }: DownholeModel3DProp
         </div>
 
         <div className="pointer-events-none absolute bottom-3 left-3 rounded-md border border-slate-700/70 bg-slate-950/70 px-2 py-1 text-[10px] text-slate-300">
-          Realistic cross-section with exploded hardware callouts from schematic depths
+          Schematic cross-section with exploded hardware callouts from configured depths
         </div>
       </div>
     );

@@ -19,6 +19,7 @@ import { DeviceAssignment } from '@/components/panels/DeviceAssignment';
 import { WellActivityTimeline } from '@/components/panels/WellActivityTimeline';
 import { WellEventFulfillment } from '@/components/panels/WellEventFulfillment';
 const DownholeModel3D = lazy(() => import('@/components/panels/DownholeModel3D'));
+const WellTrajectory3D = lazy(() => import('@/components/panels/WellTrajectory3D'));
 const ComparablesWidget = lazy(() =>
   import('@/components/panels/ComparablesWidget').then((module) => ({ default: module.ComparablesWidget })),
 );
@@ -389,6 +390,11 @@ export default function RightPanel({
         {/* Section 5 -- Downhole View */}
         <Suspense fallback={asyncCardFallback('Downhole View')}>
           <DownholeModel3D well={well} canEdit={canEdit} />
+        </Suspense>
+
+        {/* Section 5b -- 3D Wellbore Navigator */}
+        <Suspense fallback={asyncCardFallback('3D Wellbore')}>
+          <WellTrajectory3D well={well} />
         </Suspense>
 
         {/* Section 6 -- Pump Change */}
