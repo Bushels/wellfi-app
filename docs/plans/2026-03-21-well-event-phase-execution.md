@@ -51,7 +51,7 @@ Deliverables:
 
 Files:
 
-- [2026-03-21-well-event-implementation-spec.md](C:/Users/kyle/MPS/Obsidian/wellfi-app/docs/plans/2026-03-21-well-event-implementation-spec.md)
+- [2026-03-21-well-event-implementation-spec.md](C:/Users/kyle/MPS/Obsidian/docs/plans/2026-03-21-well-event-implementation-spec.md)
 
 Exit gate:
 
@@ -87,9 +87,9 @@ Key rules:
 
 Primary files:
 
-- new files under [supabase/migrations](C:/Users/kyle/MPS/Obsidian/wellfi-app/supabase/migrations)
-- [auth.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/lib/auth.tsx) only if role data must expand
-- [supabase.ts](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/lib/supabase.ts) for generated or updated table typing
+- new files under [supabase/migrations](C:/Users/kyle/MPS/Obsidian/supabase/migrations)
+- [auth.tsx](C:/Users/kyle/MPS/Obsidian/src/lib/auth.tsx) only if role data must expand
+- [supabase.ts](C:/Users/kyle/MPS/Obsidian/src/lib/supabase.ts) for generated or updated table typing
 
 Tests:
 
@@ -136,10 +136,10 @@ Decision point:
 
 Primary files:
 
-- [useWells.ts](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/hooks/useWells.ts)
-- new files under [src/hooks](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/hooks)
-- [operationalStatus.ts](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/types/operationalStatus.ts) if transitional typing is needed
-- new type files under [src/types](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/types)
+- [useWells.ts](C:/Users/kyle/MPS/Obsidian/src/hooks/useWells.ts)
+- new files under [src/hooks](C:/Users/kyle/MPS/Obsidian/src/hooks)
+- [operationalStatus.ts](C:/Users/kyle/MPS/Obsidian/src/types/operationalStatus.ts) if transitional typing is needed
+- new type files under [src/types](C:/Users/kyle/MPS/Obsidian/src/types)
 
 Tests:
 
@@ -180,9 +180,9 @@ Build:
 
 Primary files:
 
-- [RightPanel.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/components/panels/RightPanel.tsx)
-- new [WellEventForm.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/components/forms/WellEventForm.tsx)
-- [MapPage.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/pages/MapPage.tsx)
+- [RightPanel.tsx](C:/Users/kyle/MPS/Obsidian/src/components/panels/RightPanel.tsx)
+- new [WellEventForm.tsx](C:/Users/kyle/MPS/Obsidian/src/components/forms/WellEventForm.tsx)
+- [MapPage.tsx](C:/Users/kyle/MPS/Obsidian/src/pages/MapPage.tsx)
 
 Remove or hide:
 
@@ -228,10 +228,10 @@ Build:
 
 Primary files:
 
-- new [WellEventFulfillment.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/components/panels/WellEventFulfillment.tsx)
-- [UpcomingList.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/components/panels/UpcomingList.tsx)
-- [OperatorOverviewCard.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/components/panels/OperatorOverviewCard.tsx)
-- [InventoryOverview.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/components/panels/InventoryOverview.tsx)
+- new [WellEventFulfillment.tsx](C:/Users/kyle/MPS/Obsidian/src/components/panels/WellEventFulfillment.tsx)
+- [UpcomingList.tsx](C:/Users/kyle/MPS/Obsidian/src/components/panels/UpcomingList.tsx)
+- [OperatorOverviewCard.tsx](C:/Users/kyle/MPS/Obsidian/src/components/panels/OperatorOverviewCard.tsx)
+- [InventoryOverview.tsx](C:/Users/kyle/MPS/Obsidian/src/components/panels/InventoryOverview.tsx)
 - new admin inventory components if needed
 
 Tests:
@@ -266,9 +266,9 @@ Build:
 
 Primary files:
 
-- [WellMap.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/components/map/WellMap.tsx)
-- [notify-operational-status/index.ts](C:/Users/kyle/MPS/Obsidian/wellfi-app/supabase/functions/notify-operational-status/index.ts) or successor function
-- [MapPage.tsx](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/pages/MapPage.tsx)
+- [WellMap.tsx](C:/Users/kyle/MPS/Obsidian/src/components/map/WellMap.tsx)
+- [notify-operational-status/index.ts](C:/Users/kyle/MPS/Obsidian/supabase/functions/notify-operational-status/index.ts) or successor function
+- [MapPage.tsx](C:/Users/kyle/MPS/Obsidian/src/pages/MapPage.tsx)
 
 Tests:
 
@@ -298,13 +298,13 @@ Build:
 
 Primary files:
 
-- [useWells.ts](C:/Users/kyle/MPS/Obsidian/wellfi-app/src/hooks/useWells.ts)
-- [TESTING_PROTOCOL.md](C:/Users/kyle/MPS/Obsidian/wellfi-app/TESTING_PROTOCOL.md)
-- [User_Walkthrough.md](C:/Users/kyle/MPS/Obsidian/wellfi-app/User_Walkthrough.md)
-- [AGENTS.md](C:/Users/kyle/MPS/Obsidian/wellfi-app/AGENTS.md)
-- [CLAUDE.md](C:/Users/kyle/MPS/Obsidian/wellfi-app/CLAUDE.md)
-- [GEMINI.md](C:/Users/kyle/MPS/Obsidian/wellfi-app/GEMINI.md)
-- [current-state.md](C:/Users/kyle/MPS/Obsidian/wellfi-app/docs/current-state.md)
+- [useWells.ts](C:/Users/kyle/MPS/Obsidian/src/hooks/useWells.ts)
+- [TESTING_PROTOCOL.md](C:/Users/kyle/MPS/Obsidian/TESTING_PROTOCOL.md)
+- [User_Walkthrough.md](C:/Users/kyle/MPS/Obsidian/User_Walkthrough.md)
+- [AGENTS.md](C:/Users/kyle/MPS/Obsidian/AGENTS.md)
+- [CLAUDE.md](C:/Users/kyle/MPS/Obsidian/CLAUDE.md)
+- [GEMINI.md](C:/Users/kyle/MPS/Obsidian/GEMINI.md)
+- [current-state.md](C:/Users/kyle/MPS/Obsidian/docs/current-state.md)
 
 Tests:
 

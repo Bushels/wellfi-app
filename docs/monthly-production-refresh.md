@@ -63,7 +63,7 @@ Run from `wellfi-app`:
 npm run production:sync -- "C:\Users\kyle\MPS\Obsidian\Data\active_clearwater_bluesky_recent_prod_ab_sk.csv"
 ```
 
-Live Supabase reconciliation requires `SUPABASE_URL` (or `VITE_SUPABASE_URL`) plus `SUPABASE_SERVICE_ROLE_KEY`. The sync scripts now auto-load `.env` and `.env.local`, so the practical setup is to store the service-role key in `wellfi-app/.env.local`. Without that key, use `--dry-run` for an overlay rebuild preview only.
+Live Supabase reconciliation requires `SUPABASE_URL` (or `VITE_SUPABASE_URL`) plus `SUPABASE_SERVICE_ROLE_KEY`. The sync scripts now auto-load `.env` and `.env.local`, so the practical setup is to store the service-role key in `.env.local`. Without that key, use `--dry-run` for an overlay rebuild preview only.
 
 What this does:
 

@@ -37,7 +37,7 @@ Runbooks for documentation or workflow-oriented tasks:
 
 - `petro-roundtable/` — Petroleum engineering roundtable (AI specialist agents, formation knowledge bases, calculation scripts). See `petro-roundtable/CLAUDE.md` for details. Lives on `petro-roundtable/*` branches, NOT `codex/*` branches.
 
-**Note:** The agents in `wellfi-app/agents/` are development agents that help BUILD this app (Sessions 1-8). They are completely unrelated to the petroleum engineering specialist agents in `petro-roundtable/agents/`. Do not confuse the two systems.
+**Note:** The agents in `agents/` are development agents that help BUILD this app (Sessions 1-8). They are completely unrelated to the petroleum engineering specialist agents in `petro-roundtable/agents/`. Do not confuse the two systems.
 
 ## Important Rules
 

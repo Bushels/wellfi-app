@@ -59,7 +59,7 @@ Then run the standard sync against the canonical output written beside the sourc
 
 The script validates required columns, cleans stale operator overlay output, rebuilds `public/data/operators/`, inserts or syncs provisioned-operator wells into Supabase, backfills missing names when available, and writes a report to `output/monthly-production-sync/latest.json`.
 
-Live Supabase reconciliation requires `SUPABASE_URL` (or `VITE_SUPABASE_URL`) and `SUPABASE_SERVICE_ROLE_KEY`. The scripts auto-load `.env` and `.env.local`, so the normal setup is to keep the service-role key in `wellfi-app/.env.local`. If that key is unavailable, use `--dry-run` and make it explicit that DB diff counts are not available.
+Live Supabase reconciliation requires `SUPABASE_URL` (or `VITE_SUPABASE_URL`) and `SUPABASE_SERVICE_ROLE_KEY`. The scripts auto-load `.env` and `.env.local`, so the normal setup is to keep the service-role key in `.env.local`. If that key is unavailable, use `--dry-run` and make it explicit that DB diff counts are not available.
 
 ### 4. Verify immediately after sync
 

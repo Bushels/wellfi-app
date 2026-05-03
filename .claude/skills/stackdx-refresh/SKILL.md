@@ -12,7 +12,7 @@ Pull filtered well data from StackDX Maps via the in-app AI agent (Orion-1). Sta
 - **URL**: `maps.stackdx.com` (NOT `app.stackdx.com` — that URL shows an invitation wall)
 - **Access method**: Claude in Chrome MCP browser automation (headless Playwright does NOT work — hits invitation page)
 - **AI agent**: StackDX AI "Orion-1" — chat panel on the right side of the map interface
-- **Credentials**: stored in `wellfi-app/.env.local` as `STACKDX_EMAIL` and `STACKDX_PASSWORD`
+- **Credentials**: stored in `.env.local` as `STACKDX_EMAIL` and `STACKDX_PASSWORD`
 - **Account**: Derek Belle, Professional Plan
 - **Auto-download**: The AI can trigger browser downloads directly — files land in the user's Downloads folder (`C:\Users\kyle\Downloads\`)
 - **Export button**: The Jobs & Exports panel's Export button may be plan-restricted. Use the AI chat to trigger downloads instead.
@@ -152,8 +152,8 @@ Note: Table filters use AND logic — you cannot do "Clearwater OR Bluesky" with
 
 | File | Purpose |
 |------|---------|
-| `wellfi-app/.env.local` | StackDX credentials (gitignored) |
-| `wellfi-app/.codex/stackdx-jobs.local.json` | Job config for Playwright automation (legacy) |
+| `.env.local` | StackDX credentials (gitignored) |
+| `.codex/stackdx-jobs.local.json` | Job config for Playwright automation (legacy) |
 | `Data/active_clearwater_bluesky_wells_ab_sk_last6mo.csv` | Latest well export |
 | `Data/active_bluesky_clearwater_wells_AB_SK.csv` | Old basin CSV (Sept 2025 vintage, 11,764 wells) |
 | `Data/operator_inventory_clearwater_bluesky.md` | Operator inventory summary |

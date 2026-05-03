@@ -27,14 +27,14 @@ Start dev server and verify zero console errors on fresh page load:
 
 ## Check 4: Stale Reference Scan
 ```bash
-grep -rn "showLand\|toggleLand\|showProduction\|toggleProduction\|HEALTH_LEVEL_LABELS\|posterStyle" wellfi-app/src/ --include="*.ts" --include="*.tsx"
+grep -rn "showLand\|toggleLand\|showProduction\|toggleProduction\|HEALTH_LEVEL_LABELS\|posterStyle" src/ --include="*.ts" --include="*.tsx"
 ```
 **Pass criteria:** Zero matches. These are removed features.
 
 ## Check 5: HTML Escaping
 Any string interpolated into popup HTML must use the popup helper escape function, for example `escapeHtml()` in `WellPopup.tsx`:
 ```bash
-grep -n "escapeHtml" wellfi-app/src/components/map/WellPopup.tsx
+grep -n "escapeHtml" src/components/map/WellPopup.tsx
 ```
 **Pass criteria:** Popup helpers use explicit HTML escaping before interpolating user or data values into HTML.
 

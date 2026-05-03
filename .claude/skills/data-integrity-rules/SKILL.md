@@ -25,7 +25,7 @@ Each of the 4 heatmap layers has its own `SQRT_MAX` normalization constant deriv
 
 **If the CSV data changes, re-derive these constants.** Run:
 ```bash
-node -e "const d=JSON.parse(require('fs').readFileSync('wellfi-app/public/data/operators/_all/production.geojson','utf8'));['Clearwater','Bluesky'].forEach(f=>['oil','gas'].forEach(t=>{const w=d.features.filter(x=>x.properties.formation===f&&x.properties.fluid_type===t);const field=t==='oil'?'recent_oil':'recent_gas';const max=Math.max(...w.map(x=>x.properties[field]));console.log(f,t,': count='+w.length+', max='+max+', sqrt='+Math.sqrt(max).toFixed(1))}))"
+node -e "const d=JSON.parse(require('fs').readFileSync('public/data/operators/_all/production.geojson','utf8'));['Clearwater','Bluesky'].forEach(f=>['oil','gas'].forEach(t=>{const w=d.features.filter(x=>x.properties.formation===f&&x.properties.fluid_type===t);const field=t==='oil'?'recent_oil':'recent_gas';const max=Math.max(...w.map(x=>x.properties[field]));console.log(f,t,': count='+w.length+', max='+max+', sqrt='+Math.sqrt(max).toFixed(1))}))"
 ```
 
 ## Rule 3: Prefer XLSX Parsing For Monthly Snapshots

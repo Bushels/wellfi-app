@@ -56,7 +56,7 @@ See also:
 - Monthly snapshot sync: `npm run production:sync -- "<csv-path>"`
 - Overlay-only refresh: `npm run production:refresh -- "<csv-path>"`
 - Trajectory plate export: `npx tsx scripts/generate_well_trajectory_plate.ts --input "<survey.csv>" --output "<plate.svg>"`
-- Live monthly sync prerequisite: keep `SUPABASE_SERVICE_ROLE_KEY` in `wellfi-app/.env.local` so the scripts can auto-load it.
+- Live monthly sync prerequisite: keep `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` so the scripts can auto-load it.
 - Current rollout model: monthly sync writes for provisioned operators and reports unprovisioned operators as rollout gaps instead of failing the entire run.
 - Preferred documentation workflow after major changes: `.claude/skills/docs-maintainer`.
 - Cross-model rule: when workflow discovery changes, keep `AGENTS.md`, `CLAUDE.md`, and `docs/agent-workflows.md` aligned in the same pass.
